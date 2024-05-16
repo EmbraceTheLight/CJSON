@@ -132,6 +132,7 @@
     <ClCompile Include="Unserialization.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="define.h" />
     <ClInclude Include="Serialization.h" />
     <ClInclude Include="Unserialization.h" />
   </ItemGroup>
