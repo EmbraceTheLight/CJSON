@@ -1,5 +1,9 @@
 #pragma once
-
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<ctype.h>
+#include<string.h>
 // 定义JSON值的枚举类型
 enum ValueType {
 	STRING,
@@ -12,8 +16,8 @@ enum ValueType {
 
 struct JsonValue;
 typedef struct Array {
-	struct JsonValue* jv;//Array中的元素
 	unsigned int nums; //Array中元素数量
+	struct JsonValue* jv;//Array中的元素
 }Array;
 
 typedef struct Object {
@@ -22,7 +26,7 @@ typedef struct Object {
 
 typedef struct JsonValue {
 	enum Valuetype type;
-	union {
+	union  {
 		char* string;
 		double number;
 		bool boolean;
