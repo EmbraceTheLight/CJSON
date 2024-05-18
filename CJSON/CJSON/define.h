@@ -1,15 +1,17 @@
 #pragma once
+#define  _CRT_SECURE_NO_WARNINGS 1
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
 #include<ctype.h>
 #include<string.h>
+
 // 定义JSON值的枚举类型
 enum ValueType {
 	STRING,
 	NUMBER,
 	BOOLEAN,
-	null,
+	NULLTYPE,
 	ARRAY,
 	OBJECT
 };
@@ -17,7 +19,7 @@ enum ValueType {
 struct JsonValue;
 typedef struct Array {
 	unsigned int nums; //Array中元素数量
-	struct JsonValue* jv;//Array中的元素
+	struct JsonValue** jvs;//Array中的元素
 }Array;
 
 typedef struct Object {
@@ -31,7 +33,7 @@ typedef struct JsonValue {
 		double number;
 		bool boolean;
 		void* null;
-		Array* array_m;
+		Array* array;
 		Obj* object;
 	};
 }JsonValue;

@@ -129,12 +129,14 @@
   <ItemGroup>
     <ClCompile Include="main.c" />
     <ClCompile Include="Serialization.c" />
+    <ClCompile Include="test.c" />
     <ClCompile Include="Unserialization.c" />
     <ClCompile Include="utilities.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="define.h" />
     <ClInclude Include="Serialization.h" />
+    <ClInclude Include="tests.h" />
     <ClInclude Include="Unserialization.h" />
     <ClInclude Include="utilities.h" />
   </ItemGroup>
