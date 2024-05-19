@@ -1,5 +1,12 @@
-﻿  main.c
-D:\Study\自学\CJSON\CJSON\CJSON\main.c(5,2): warning C4013: “test_handle_input”未定义；假设外部返回 int
+﻿  Serialization.c
+  Unserialization.c
+  helper.c
+  main.c
+D:\Study\自学\CJSON\CJSON\CJSON\Unserialization.c(21,14): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\Unserialization.c(47,11): warning C4047: “=”:“KeyValue **”与“KeyValue *”的间接级别不同
+D:\Study\自学\CJSON\CJSON\CJSON\Unserialization.c(64,11): warning C4047: “=”:“JsonValue **”与“JsonValue *”的间接级别不同
   test.c
+  utilities.c
   正在生成代码...
+D:\Study\自学\CJSON\CJSON\CJSON\Unserialization.c(133,1): warning C4716: “parse_array”: 必须返回一个值
   CJSON.vcxproj -> D:\Study\自学\CJSON\CJSON\x64\Debug\CJSON.exe

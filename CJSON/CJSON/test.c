@@ -10,3 +10,16 @@ void test_handle_input(void) {
 		printf("input failed.");
 	}
 }
+
+void test_parse_string(void) {
+	char* str = "\"52255\",evgvss";
+	printf("original: %s\n", str);
+	char* res = parse_string(&str);
+	if (res != NULL) {
+		printf("res: %s\n", res);
+		printf("str: %s\n", str);
+	}
+	else {
+		printf("parse string failed.");
+	}
+}

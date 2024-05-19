@@ -30,6 +30,9 @@
     <ClCompile Include="test.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="helper.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Serialization.h">
@@ -47,5 +50,13 @@
     <ClInclude Include="tests.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="helper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\张恩阳\Downloads\response_1716085249508.json">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>
