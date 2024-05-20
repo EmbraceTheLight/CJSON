@@ -1,12 +1,11 @@
 #include"helper.h"
 #include"Unserialization.h"
 
-char* strptr;
 char* handle_input(void) {
 	char temp[BUFFER_SIZE];
 	char* json = (char*)calloc(INIT_STR_SIZE, sizeof(char));
 	if (json == NULL) {
-		printf("INIT json string failed!");
+		printf("[Unserialization::handle_input] INIT json string failed!\n");
 		return NULL;
 	}
 
@@ -25,7 +24,7 @@ char* handle_input(void) {
 				json = t;
 			}
 			else {
-				printf("Realloc json string failed!");
+				printf("[Unserialization::handle_input]  Realloc json string failed!\n");
 				free(json);
 				return NULL;
 			}
@@ -37,33 +36,34 @@ char* handle_input(void) {
 }
 
 Obj* init_obj() {
-	Obj* ret = (Obj*)malloc(1*sizeof(Obj));
+	Obj* ret = (Obj*)malloc(1 * sizeof(Obj));
 	if (ret == NULL) {
-		printf("Init Obj failed!");
+		printf("[Unserialization::init_obj] Init Obj failed!\n");
 		return NULL;
 	}
 	ret->nums = 0;
 	ret->size = INIT_OBJ_NUMS;
 	ret->kvs = (KeyValue*)malloc(INIT_OBJ_NUMS * sizeof(KeyValue));
 	if (ret->kvs == NULL) {
-		printf("[Unserialization::init_obj] Init KeyValue failed!");
+		printf("[Unserialization::init_obj] Init KeyValue failed!\n");
 		free(ret->kvs);
 		ret->kvs = NULL;
 		return NULL;
 	}
 	return ret;
 }
+
 Array* init_array() {
-	Array* ret = (Array*)malloc(1*sizeof(Array));
+	Array* ret = (Array*)malloc(1 * sizeof(Array));
 	if (ret == NULL) {
-		printf("Init Array failed!");
+		printf("[Unserialization::init_array] Init Array failed!\n");
 		return NULL;
 	}
 	ret->nums = 0;
 	ret->nums = INIT_ARRAY_NUMS;
 	ret->jvs = (JsonValue*)malloc(INIT_ARRAY_NUMS * sizeof(JsonValue));
 	if (ret->jvs == NULL) {
-		printf("[Unserialization::init_obj] Init KeyValue failed!");
+		printf("[Unserialization::init_array] Init KeyValue failed!\n");
 		free(ret->jvs);
 		ret->jvs = NULL;
 		return NULL;
@@ -71,45 +71,188 @@ Array* init_array() {
 	return ret;
 }
 
+KeyValue* init_keyValue(char* str) {
+	KeyValue* kv = (KeyValue*)malloc(1 * sizeof(KeyValue));
+	if (kv == NULL) {
+		printf("[Unserialization::init_keyValue] Malloc KeyValue failed!\n");
+		return NULL;
+	}
+	kv->key = str;
+	kv->value.type = UNDEFINED;
+	return kv;
+}
+
+JsonValue* init_jsonValue(enum ValueType type) {
+	JsonValue* jv = (JsonValue*)malloc(1 * sizeof(JsonValue));
+	if (jv == NULL) {
+		printf("[Unserialization::init_jsonValue] Malloc JsonValue failed!\n");
+		return NULL;
+	};
+	jv->type= type;
+	return jv;
+}
+
+// 对obj的kvs进行扩容
+Obj* resize_objKvs(Obj* obj, size_t size) {
+	KeyValue* kvs = NULL;
+	obj->kvs = (KeyValue*)realloc(kvs, size * sizeof(KeyValue));
+	if (kvs == NULL) {
+		printf("[Unserialization::resize_obj] Realloc KeyValue failed!\n");
+		return NULL;
+	}
+	obj->kvs = kvs;
+	return obj;
+}
+
+Obj* check_ObjKvsSize(Obj* obj) {
+	if (obj->nums >= obj->size) { //对kvs进行扩容
+		Obj* tmp = NULL;
+		tmp = resize_objKvs(obj, obj->size + INIT_OBJ_NUMS);
+		if (tmp == NULL) {
+			printf("[Unserialization::parse_object] Realloc KeyValue failed!\n");
+
+			return NULL;
+		}
+		else {
+			obj = tmp;
+		}
+	}
+	return obj;
+}
+
 Obj* parse_object(char** json_ptr) {
 	bool is_key = true;
-	char* mov = *json_ptr;
 	Obj* newObj = init_obj();
+
+	char* mov = *json_ptr;
+	mov = eat_space(eat_space(mov)+1);//到达第一个键值对的第一个字符
+
 	while (*mov != '}' && *mov != '\0') {
-		mov = eat_space(mov);
 		switch (*mov) {
 		case '"':
-			if (is_key) { //解析的是key
-				char* key = parse_string(json_ptr);
+			if (is_key) { 
+				char* key = parse_string(&mov);
 				if (key == NULL) { //处理解析失败的情况：执行清理工作，然后退出
+					printf("[Unserialization::parse_object] parse object failed!\n");
 
+					return NULL;
 				}
+				mov = eat_space(mov);
+				if (*mov != ':') { //key后面没有匹配到冒号，说明JSON格式错误
+					printf("[Unserialization::parse_object] Invalid json format!\n");
+
+					return NULL;
+				}
+
+				/*将key放入obj的keyValue的key中*/
+				newObj->kvs[newObj->nums].key = key;
 				is_key = !is_key;
+				mov = eat_space(mov + 1);//跳过冒号，匹配value的第一个字符
 			}
-			break;
-		case ':': 
-			if (is_key) {  //匹配到冒号，且之前已经解析到了key，说明下一步寻找value
+			else {//值为字符串
+				char* value = parse_string(&mov);
+				if (value == NULL) {
+					printf("[Unserialization::parse_object] parse object failed!\n");
+
+					return NULL;
+				}
+				newObj->kvs[newObj->nums].value.type = STRING;
+				newObj->kvs[newObj->nums].value.string = value;
+				newObj->nums++;
+				newObj= check_ObjKvsSize(newObj);
+				mov = obj_next_token(mov);
 				is_key = !is_key;
-			}
-			else { //否则说明JSON格式错误
-				printf("Invalid json format!");
-				exit(EXIT_FAILURE);
 			}
 			break;
 		case '{': //匹配到左大括号，说明发现嵌套object
-			Obj * parsedObj = parse_object(json_ptr);
+		{
+			Obj* parsedObj = parse_object(&mov);
+			if (parsedObj == NULL) {
+				printf("[Unserialization::parse_object] parse object failed!\n");
+
+				return NULL;
+			}
+			newObj->kvs[newObj->nums].value.type = OBJECT;
+			newObj->kvs[newObj->nums].value.object = parsedObj;
+			newObj->nums++;
+			newObj = check_ObjKvsSize(newObj);
+			mov = obj_next_token(mov);
 			is_key = !is_key;
 			break;
+		}
 		case '['://匹配到左中括号，说明发现嵌套数组
-			Array * parsedArr = parse_array(json_ptr);
+		{
+			Array* parsedArr = parse_array(json_ptr);
+			if (parsedArr == NULL) {
+				printf("[Unserialization::parse_object] parse array failed!\n");
+
+				return NULL;
+			}
+			newObj->kvs[newObj->nums].value.type = ARRAY;
+			newObj->kvs[newObj->nums].value.object = parsedArr;
+			newObj->nums++;
+			newObj = check_ObjKvsSize(newObj);
+			mov = obj_next_token(mov);
 			is_key = !is_key;
 			break;
+		}
 		default:
+			if (isdigit(*mov)|| *mov == '-') { //匹配到数字
+				double d = strtod(mov, &mov);
+				mov = eat_space(mov);
+				if (*mov == ','|| *mov == '}') {
+					newObj->kvs[newObj->nums].value.type = NUMBER;
+					newObj->kvs[newObj->nums].value.number = d;
+					newObj->nums++;
+					newObj = check_ObjKvsSize(newObj);
+					is_key = !is_key;
+					mov = obj_next_token(++mov);
+				}
+				else {
+					printf("[Unserialization::parse_object] Invalid json format!\n");
+
+					return NULL;
+				}
+			}
+			else { //匹配到其他字符，说明可能是布尔值或null
+				Type ret = is_str_legal(mov);
+				if (ret != UNDEFINED) {
+					switch (ret) {
+					case TRUE:
+						newObj->kvs[newObj->nums].value.type= TRUE;
+						newObj->kvs[newObj->nums].value.boolean = true;
+						mov = mov+4;
+						break;
+					case FALSE:
+						newObj->kvs[newObj->nums].value.type = FALSE;
+						newObj->kvs[newObj->nums].value.boolean = false;
+						mov = mov + 5;
+						break;
+					case NULLTYPE:
+						newObj->kvs[newObj->nums].value.type = NULLTYPE;
+						newObj->kvs[newObj->nums].value.null = NULL;
+						mov = mov + 4;
+						break;
+					default:
+						break;
+					}
+					newObj->nums++;
+					newObj = check_ObjKvsSize(newObj);
+					mov	= obj_next_token(mov);
+					is_key = !is_key;
+				}
+				else {
+					printf("[Unserialization::parse_object] Invalid json format!\n");
+
+					return NULL;
+				}
+			}
 			break;
 		}
 	}
+
 	if (*mov == '\0') { //没有匹配到右大括号
-		printf("Invalid json format!");
+		printf("[Unserialization::parse_object] Invalid json format!\n");
 		exit(EXIT_FAILURE);
 	}
 	*json_ptr = mov + 1;
@@ -120,12 +263,12 @@ char* parse_string(char** json_ptr) {
 	char* start = (*json_ptr) + 1;
 	char* end = find_token(start, '"');
 	if (end == NULL) {
-		printf("Invalid string format!");
+		printf("[Unserialization::parse_string] Invalid string format!\n");
 		return NULL;
 	}
 	char* ret = (char*)malloc((end - start + 1) * sizeof(char));
 	if (ret == NULL) {
-		printf("Malloc string failed!");
+		printf("[Unserialization::parse_string] Malloc string failed!\n");
 		return NULL;
 	}
 	strncpy(ret, start, end - start);

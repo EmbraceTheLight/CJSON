@@ -5,22 +5,31 @@
 #include<stdbool.h>
 #include<ctype.h>
 #include<string.h>
+#include<math.h>
+#include"utilities.h"
+
+#define BUFFER_SIZE 4096 //缓冲字符串大小
+#define INIT_STR_SIZE 1024//初始化字符串大小
+#define INIT_OBJ_NUMS 10 //初始化Obj对象个数
+#define INIT_ARRAY_NUMS 10 //初始化Array对象个数
 
 // 定义JSON值的枚举类型
-enum ValueType {
+typedef enum ValueType {
+	UNDEFINED,
 	STRING,
 	NUMBER,
-	BOOLEAN,
+	TRUE,
+	FALSE,
 	NULLTYPE,
 	ARRAY,
 	OBJECT
-};
+}Type;
 
 struct Array;
 struct Object;
 
 typedef struct JsonValue {
-	enum ValueType type;
+	Type type;
 	union  {
 		char* string;
 		double number;
@@ -39,17 +48,12 @@ typedef struct Array {
 
 typedef struct KeyValue {
 	char* key;
-	struct JsonValue* value;
+	struct JsonValue value;
 }KeyValue;
 
 typedef struct Object {
-	unsigned int size; //Object中开辟的元素可用空间大小
+	size_t size; //Object中开辟的元素可用空间大小
 	unsigned int nums; //Object中元素数量
 	struct KeyValue* kvs;//Object中的元素
 }Obj;
 
-//typedef struct JSON {
-//	KeyValue* pre;
-//	KeyValue* cur;
-//	KeyValue* next;
-//}JSON;

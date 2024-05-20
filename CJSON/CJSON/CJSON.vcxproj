@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="helper.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="print.c" />
     <ClCompile Include="Serialization.c" />
     <ClCompile Include="test.c" />
     <ClCompile Include="Unserialization.c" />
@@ -137,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="define.h" />
     <ClInclude Include="helper.h" />
+    <ClInclude Include="print.h" />
     <ClInclude Include="Serialization.h" />
     <ClInclude Include="tests.h" />
     <ClInclude Include="Unserialization.h" />
