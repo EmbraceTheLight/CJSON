@@ -53,7 +53,7 @@ void test_parse_object(void) {
 
 void test_parse_array(void) {
 	char* res = handle_input();
-	printf("original: %s\n", res);
+	printf("original: %s\n\n\n", res);
 	Array* arr = parse_array(&res);
 	if (arr != NULL) {
 		print_arr(arr);

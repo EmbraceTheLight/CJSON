@@ -1,2 +1,25 @@
-﻿  main.c
-  CJSON.vcxproj -> D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\x64\Debug\CJSON.exe
+﻿  print.c
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(5,43): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(35,31): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(37,31): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(50,31): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(73,46): warning C4018: “<”: 有符号/无符号不匹配
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(82,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(108,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(135,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(161,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(189,38): warning C4133: “函数”: 从“Obj *”到“Array *”的类型不兼容
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(193,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(221,39): warning C4133: “函数”: 从“Obj *”到“Obj *”的类型不兼容
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(225,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(268,46): warning C4018: “<”: 有符号/无符号不匹配
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(277,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(303,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(330,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(356,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(382,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(404,32): warning C4133: “函数”: 从“Obj *”到“Obj *”的类型不兼容
+D:\Study\自学\CJSON\CJSON\CJSON\print.c(408,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+  test.c
+  正在生成代码...
+  CJSON.vcxproj -> D:\Study\自学\CJSON\CJSON\x64\Debug\CJSON.exe

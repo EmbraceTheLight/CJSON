@@ -60,7 +60,7 @@ Array* init_array() {
 		return NULL;
 	}
 	ret->nums = 0;
-	ret->nums = INIT_ARRAY_NUMS;
+	ret->size = INIT_ARRAY_NUMS;
 	ret->jvs = (JsonValue*)malloc(INIT_ARRAY_NUMS * sizeof(JsonValue));
 	if (ret->jvs == NULL) {
 		printf("[Unserialization::init_array] Init KeyValue failed!\n");
@@ -209,7 +209,7 @@ Obj* parse_object(char** json_ptr) {
 		}
 		case '['://匹配到左中括号，说明发现嵌套数组
 		{
-			Array* parsedArr = parse_array(json_ptr);
+			Array* parsedArr = parse_array(&mov);
 			if (parsedArr == NULL) {
 				printf("[Unserialization::parse_object] parse array failed!\n");
 
@@ -232,7 +232,7 @@ Obj* parse_object(char** json_ptr) {
 					newObj->nums++;
 					newObj = check_ObjKvsSize(newObj);
 					is_key = !is_key;
-					mov++;
+					//mov++;
 				}
 				else {
 					printf("[Unserialization::parse_object] Invalid json format!\n");
@@ -395,6 +395,11 @@ Array* parse_array(char** json_ptr) {
 					newArr->nums++;
 					newArr = check_ArrayJvsSize(newArr);
 				}
+				else {
+					printf("[Unserialization::parse_array] Invalid json format!\n");
+
+					return NULL;
+				}
 			}
 			break;
 		}
@@ -406,7 +411,7 @@ Array* parse_array(char** json_ptr) {
 
 		return NULL;
 	}
-
+	*json_ptr = mov + 1;
 	return newArr;
 }
 
