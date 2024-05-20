@@ -88,28 +88,28 @@ JsonValue* init_jsonValue(enum ValueType type) {
 		printf("[Unserialization::init_jsonValue] Malloc JsonValue failed!\n");
 		return NULL;
 	};
-	jv->type= type;
+	jv->type = type;
 	return jv;
 }
 
 // 对obj的kvs进行扩容
-Obj* resize_objKvs(Obj* obj, size_t size) {
+static Obj* resize_objKvs(Obj* obj, size_t size) {
 	KeyValue* kvs = NULL;
-	obj->kvs = (KeyValue*)realloc(kvs, size * sizeof(KeyValue));
+	kvs = (KeyValue*)realloc(obj->kvs, size * sizeof(KeyValue));
 	if (kvs == NULL) {
-		printf("[Unserialization::resize_obj] Realloc KeyValue failed!\n");
+		printf("[Unserialization::resize_objKvs] Realloc KeyValue failed!\n");
 		return NULL;
 	}
 	obj->kvs = kvs;
 	return obj;
 }
 
-Obj* check_ObjKvsSize(Obj* obj) {
+static Obj* check_ObjKvsSize(Obj* obj) {
 	if (obj->nums >= obj->size) { //对kvs进行扩容
 		Obj* tmp = NULL;
 		tmp = resize_objKvs(obj, obj->size + INIT_OBJ_NUMS);
 		if (tmp == NULL) {
-			printf("[Unserialization::parse_object] Realloc KeyValue failed!\n");
+			printf("[Unserialization::check_ObjKvsSize] Realloc KeyValue failed!\n");
 
 			return NULL;
 		}
@@ -120,17 +120,46 @@ Obj* check_ObjKvsSize(Obj* obj) {
 	return obj;
 }
 
+// 对array的jvs进行扩容
+static Array* resize_arrJvs(Array* arr, size_t size) {
+	JsonValue* jvs = NULL;
+	jvs = (JsonValue*)realloc(arr->jvs, size * sizeof(JsonValue));
+	if (jvs == NULL) {
+		printf("[Unserialization::resize_objKvs] Realloc KeyValue failed!\n");
+		return NULL;
+	}
+	arr->jvs = jvs;
+	return arr;
+}
+
+static Array* check_ArrayJvsSize(Array* arr) {
+	if (arr->nums >= arr->size) { //对kvs进行扩容
+		Array* tmp = NULL;
+		tmp = resize_arrJvs(arr, arr->size + INIT_ARRAY_NUMS);
+		if (tmp == NULL) {
+			printf("[Unserialization::check_ObjKvsSize] Realloc KeyValue failed!\n");
+
+			return NULL;
+		}
+		else {
+			arr = tmp;
+		}
+	}
+	return arr;
+}
+
+
 Obj* parse_object(char** json_ptr) {
 	bool is_key = true;
 	Obj* newObj = init_obj();
 
 	char* mov = *json_ptr;
-	mov = eat_space(eat_space(mov)+1);//到达第一个键值对的第一个字符
+	mov = eat_space(mov + 1);//到达第一个键值对的第一个字符
 
 	while (*mov != '}' && *mov != '\0') {
 		switch (*mov) {
 		case '"':
-			if (is_key) { 
+			if (is_key) {
 				char* key = parse_string(&mov);
 				if (key == NULL) { //处理解析失败的情况：执行清理工作，然后退出
 					printf("[Unserialization::parse_object] parse object failed!\n");
@@ -159,8 +188,7 @@ Obj* parse_object(char** json_ptr) {
 				newObj->kvs[newObj->nums].value.type = STRING;
 				newObj->kvs[newObj->nums].value.string = value;
 				newObj->nums++;
-				newObj= check_ObjKvsSize(newObj);
-				mov = obj_next_token(mov);
+				newObj = check_ObjKvsSize(newObj);
 				is_key = !is_key;
 			}
 			break;
@@ -176,7 +204,6 @@ Obj* parse_object(char** json_ptr) {
 			newObj->kvs[newObj->nums].value.object = parsedObj;
 			newObj->nums++;
 			newObj = check_ObjKvsSize(newObj);
-			mov = obj_next_token(mov);
 			is_key = !is_key;
 			break;
 		}
@@ -192,21 +219,20 @@ Obj* parse_object(char** json_ptr) {
 			newObj->kvs[newObj->nums].value.object = parsedArr;
 			newObj->nums++;
 			newObj = check_ObjKvsSize(newObj);
-			mov = obj_next_token(mov);
 			is_key = !is_key;
 			break;
 		}
 		default:
-			if (isdigit(*mov)|| *mov == '-') { //匹配到数字
+			if (isdigit(*mov) || *mov == '-') { //匹配到数字
 				double d = strtod(mov, &mov);
 				mov = eat_space(mov);
-				if (*mov == ','|| *mov == '}') {
+				if (*mov == ',' || *mov == '}') {
 					newObj->kvs[newObj->nums].value.type = NUMBER;
 					newObj->kvs[newObj->nums].value.number = d;
 					newObj->nums++;
 					newObj = check_ObjKvsSize(newObj);
 					is_key = !is_key;
-					mov = obj_next_token(++mov);
+					mov++;
 				}
 				else {
 					printf("[Unserialization::parse_object] Invalid json format!\n");
@@ -219,9 +245,9 @@ Obj* parse_object(char** json_ptr) {
 				if (ret != UNDEFINED) {
 					switch (ret) {
 					case TRUE:
-						newObj->kvs[newObj->nums].value.type= TRUE;
+						newObj->kvs[newObj->nums].value.type = TRUE;
 						newObj->kvs[newObj->nums].value.boolean = true;
-						mov = mov+4;
+						mov = mov + 4;
 						break;
 					case FALSE:
 						newObj->kvs[newObj->nums].value.type = FALSE;
@@ -238,7 +264,6 @@ Obj* parse_object(char** json_ptr) {
 					}
 					newObj->nums++;
 					newObj = check_ObjKvsSize(newObj);
-					mov	= obj_next_token(mov);
 					is_key = !is_key;
 				}
 				else {
@@ -249,18 +274,20 @@ Obj* parse_object(char** json_ptr) {
 			}
 			break;
 		}
+		mov = next_token(mov);
 	}
 
 	if (*mov == '\0') { //没有匹配到右大括号
 		printf("[Unserialization::parse_object] Invalid json format!\n");
-		exit(EXIT_FAILURE);
+
+		return NULL;
 	}
 	*json_ptr = mov + 1;
 	return newObj;
 }
 
 char* parse_string(char** json_ptr) {
-	char* start = (*json_ptr) + 1;
+	char* start = (*json_ptr) + 1; //start指向第一个双引号后的第一个字符
 	char* end = find_token(start, '"');
 	if (end == NULL) {
 		printf("[Unserialization::parse_string] Invalid string format!\n");
@@ -278,6 +305,108 @@ char* parse_string(char** json_ptr) {
 }
 
 Array* parse_array(char** json_ptr) {
+	Array* newArr = init_array();
 
+	char* mov = *json_ptr;
+	mov = eat_space(mov + 1);//到达第一个元素的第一个字符
+
+	while (*mov != ']' && *mov != '\0') {
+		switch (*mov) {
+		case '"': //匹配到字符串
+		{
+			char* value = parse_string(&mov);
+			if (value == NULL) {
+				printf("[Unserialization::parse_array] parse array failed!\n");
+
+				return NULL;
+			}
+			newArr->jvs[newArr->nums].type = STRING;
+			newArr->jvs[newArr->nums].string = value;
+			newArr->nums++;
+			newArr = check_ArrayJvsSize(newArr);
+			break;
+		}
+		case '{': //匹配到左大括号，说明发现嵌套object
+		{
+			Obj* parsedObj = parse_object(&mov);
+			if (parsedObj == NULL) {
+				printf("[Unserialization::parse_array] parse object failed!\n");
+
+				return NULL;
+			}
+			newArr->jvs[newArr->nums].type = OBJECT;
+			newArr->jvs[newArr->nums].object = parsedObj;
+			newArr->nums++;
+			newArr = check_ArrayJvsSize(newArr);
+			break;
+		}
+		case '['://匹配到左中括号，说明发现嵌套数组
+		{
+			Array* parsedArr = parse_array(&mov);
+			if (parsedArr == NULL) {
+				printf("[Unserialization::parse_array] parse array failed!\n");
+
+				return NULL;
+			}
+			newArr->jvs[newArr->nums].type = ARRAY;
+			newArr->jvs[newArr->nums].object = parsedArr;
+			newArr->nums++;
+			newArr = check_ArrayJvsSize(newArr);
+			break;
+		}
+		default:
+			if (isdigit(*mov) || *mov == '-') { //匹配到数字
+				double d = strtod(mov, &mov);
+				mov = eat_space(mov);
+				if (*mov == ',' || *mov == ']') {
+					newArr->jvs[newArr->nums].type = NUMBER;
+					newArr->jvs[newArr->nums].number = d;
+					newArr->nums++;
+					newArr = check_ArrayJvsSize(newArr);
+				}
+				else {
+					printf("[Unserialization::parse_array] Invalid json format!\n");
+
+					return NULL;
+				}
+			}
+			else { //匹配到其他字符，说明可能是布尔值或null
+				Type ret = is_str_legal(mov);
+				if (ret != UNDEFINED) {
+					switch (ret) {
+					case TRUE:
+						newArr->jvs[newArr->nums].type = TRUE;
+						newArr->jvs[newArr->nums].boolean = true;
+						mov = mov + 4;
+						break;
+					case FALSE:
+						newArr->jvs[newArr->nums].type = FALSE;
+						newArr->jvs[newArr->nums].boolean = false;
+						mov = mov + 5;
+						break;
+					case NULLTYPE:
+						newArr->jvs[newArr->nums].type = NULLTYPE;
+						newArr->jvs[newArr->nums].null = NULL;
+						mov = mov + 4;
+						break;
+					default:
+						break;
+					}
+					newArr->nums++;
+					newArr = check_ArrayJvsSize(newArr);
+				}
+			}
+			break;
+		}
+		mov = next_token(mov);
+	}
+
+	if (*mov == '\0') { //没有匹配到右中括号
+		printf("[Unserialization::parse_array] Invalid json format!\n");
+
+		return NULL;
+	}
+
+	return newArr;
 }
 

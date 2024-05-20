@@ -42,7 +42,6 @@ void test_is_number(void) {
 void test_parse_object(void) {
 	char* res = handle_input();
 	printf("original: %s\n", res);
-
 	Obj* obj = parse_object(&res);
 	if (obj != NULL) {
 		print_obj(obj);
@@ -52,14 +51,14 @@ void test_parse_object(void) {
 	}
 }
 
-void test_parse_number_object(void) {
+void test_parse_array(void) {
 	char* res = handle_input();
-}
-
-void test_parse_bool_object(void){
-	char* res = handle_input();
-}
-
-void test_parse_null_object(void) {
-	char* res = handle_input();
+	printf("original: %s\n", res);
+	Array* arr = parse_array(&res);
+	if (arr != NULL) {
+		print_arr(arr);
+	}
+	else {
+		printf("parse array failed.");
+	}
 }

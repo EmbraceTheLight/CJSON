@@ -6,6 +6,7 @@ int main(void) {
 	//test_parse_string();
 	//test_is_number();
 	test_parse_object();
+	//test_parse_array();
 	return 0;
 }
 

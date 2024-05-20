@@ -1,13 +1,2 @@
-﻿  print.c
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(5,43): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(35,24): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(37,24): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(50,27): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(73,46): warning C4018: “<”: 有符号/无符号不匹配
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(82,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(108,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(135,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(161,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(191,39): warning C4133: “函数”: 从“Obj *”到“Obj *”的类型不兼容
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(195,15): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
+﻿  main.c
   CJSON.vcxproj -> D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\x64\Debug\CJSON.exe

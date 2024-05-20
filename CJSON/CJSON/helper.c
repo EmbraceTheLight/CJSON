@@ -63,7 +63,7 @@ Type is_number(char* str, char** end,double*ret) {
 	}
 }
 
-char* obj_next_token(char* mov) {
+char* next_token(char* mov) {
 	mov = eat_space(mov);
 	if (*mov == ',' ) {
 		return eat_space(mov + 1);

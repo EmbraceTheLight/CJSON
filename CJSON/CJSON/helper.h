@@ -14,4 +14,7 @@ Type is_str_legal(char* str);
 Type is_number(char* str, char** end, double* ret);
 
 // 对于object对象：返回下一个有效字符的位置
-char*obj_next_token(char* mov);
+char*next_token(char* mov);
+
+// 对于object对象：返回下一个有效字符的位置
+char* arr_next_token(char* mov);
