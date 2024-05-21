@@ -148,7 +148,6 @@ static Array* check_ArrayJvsSize(Array* arr) {
 	return arr;
 }
 
-
 Obj* parse_object(char** json_ptr) {
 	bool is_key = true;
 	Obj* newObj = init_obj();
@@ -232,7 +231,6 @@ Obj* parse_object(char** json_ptr) {
 					newObj->nums++;
 					newObj = check_ObjKvsSize(newObj);
 					is_key = !is_key;
-					//mov++;
 				}
 				else {
 					printf("[Unserialization::parse_object] Invalid json format!\n");
@@ -293,13 +291,27 @@ char* parse_string(char** json_ptr) {
 		printf("[Unserialization::parse_string] Invalid string format!\n");
 		return NULL;
 	}
+	while (*(end - 1) == '\\') { //遇到转义字符\"
+		if (end == NULL) {
+			printf("[Unserialization::parse_string] Invalid string format!\n");
+			return NULL;
+		}
+		 end = find_token(end+1, '"');
+	}
+
+	size_t len = end - start + 1 - num_of_escape_char(start,end);//字符串长度，计算转义字符
 	char* ret = (char*)malloc((end - start + 1) * sizeof(char));
 	if (ret == NULL) {
 		printf("[Unserialization::parse_string] Malloc string failed!\n");
 		return NULL;
 	}
-	strncpy(ret, start, end - start);
-	ret[end - start] = '\0';
+
+	char*tmp = my_strcpy(ret, start, end);
+	if (tmp == NULL) {
+		printf("[Unserialization::parse_string] Copy string failed!\n");
+		free(ret);
+		return NULL;
+	}
 	*json_ptr = end + 1;
 	return ret;
 }

@@ -6,8 +6,5 @@ void test_handle_input(void);
 void test_parse_string(void);
 void test_is_number(void);
 
-//解析JSON object的测试用例
-void test_parse_object(void);
-
-//解析JSON array的测试用例
-void test_parse_array(void);
+//解析JSON 的测试用例
+void test_json_string(void);

@@ -39,26 +39,29 @@ void test_is_number(void) {
 	printf("now,str: %s\n", str);
 }
 
-void test_parse_object(void) {
+void test_json_string(void) {
 	char* res = handle_input();
-	printf("original: %s\n", res);
-	Obj* obj = parse_object(&res);
-	if (obj != NULL) {
-		print_obj(obj);
+	Type t = check_arr_or_obj(res);
+	if (t == OBJECT) {
+		Obj* obj = parse_object(&res);
+		if (obj != NULL) {
+			print_obj(obj);
+		}
+		else {
+			printf("parse object failed.");
+		}
+	}
+	else if (t == ARRAY) {
+		Array* arr = parse_array(&res);
+		if (arr != NULL) {
+			print_arr(arr);
+		}
+		else {
+			printf("parse array failed.");
+		}
 	}
 	else {
-		printf("parse object failed.");
+		printf("not a valid json string.");
 	}
 }
 
-void test_parse_array(void) {
-	char* res = handle_input();
-	printf("original: %s\n\n\n", res);
-	Array* arr = parse_array(&res);
-	if (arr != NULL) {
-		print_arr(arr);
-	}
-	else {
-		printf("parse array failed.");
-	}
-}
