@@ -9,7 +9,7 @@
 #include"utilities.h"
 
 #define BUFFER_SIZE 4096 //缓冲字符串大小
-#define INIT_STR_SIZE 1024//初始化字符串大小
+#define INIT_STR_SIZE 2048//初始化字符串大小
 #define INIT_OBJ_NUMS 10 //初始化Obj对象个数
 #define INIT_ARRAY_NUMS 15 //初始化Array对象个数
 

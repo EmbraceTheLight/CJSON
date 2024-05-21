@@ -60,4 +60,11 @@
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test files\array1.json" />
+    <None Include="test files\object1.json" />
+    <None Include="test files\object2.json" />
+    <None Include="test files\object3.json" />
+    <None Include="test files\object4.json" />
+  </ItemGroup>
 </Project>

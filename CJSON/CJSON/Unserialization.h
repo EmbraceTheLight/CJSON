@@ -11,9 +11,6 @@ Obj* init_obj();
 // init_array 初始化Array对象
 Array* init_array();
 
-// init_keyValue 初始化KeyValue对象
-KeyValue* init_keyValue(char *str);
-
 // parse_object 解析json中的object对象，返回解析出来的Obj对象,并将json_ptr指向右大括号后一个字符
 Obj* parse_object(char** json_ptr);
 
@@ -23,3 +20,14 @@ char* parse_string(char** json_ptr);
 // parse_array 解析json中的array对象，返回解析出来的array对象,并将json_ptr指向右中括号后一个字符
 Array* parse_array(char** json_ptr);
 
+// find_by_key 在Obj对象中查找key对应的KeyValue对象
+KeyValue* find_by_key(Obj* obj, char* key);
+
+// del_by_key 删除Obj对象中key对应的KeyValue对象
+bool del_by_key(Obj* obj, char* key);
+
+// update_value 更新Obj对象中key对应的KeyValue对象的value值
+bool update_value(Obj* obj, char* key, void* value, Type type);
+
+// add_key_value 添加KeyValue对象到Obj对象中
+bool create_key_value(Obj* obj);

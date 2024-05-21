@@ -1,0 +1,10 @@
+[
+  "apple",
+  123,
+  true,
+  {"name": "Alice", "age": 25},
+  trUe,FalsE,null,
+  ["a", "b", "c"]
+]
+
+

@@ -1,0 +1,49 @@
+{
+    "code": 200,
+    "data": {
+        "CreatedAt": "2024-05-20T14:47:57.527+08:00",
+        "UpdatedAt": "2024-05-20T14:47:57.527+08:00",
+        "DeletedAt": null,
+        "userID": 49645475577925,
+        "userName": "zey",
+        "password": "",
+        "email": "1010642166@qq.com",
+        "signature": "顺风车深V的V是",
+        "shells": 1000,
+        "isAdmin": -1,
+        "count": 0,
+        "userLevel": {
+            "userLevel": 0,
+            "exp": 0,
+            "nextExp": 2,
+            "UID": 49645475577925
+        },
+        "videos": [],
+        "userHistory": [],
+        "favorites": [
+            {
+                "CreatedAt": "2024-05-20T14:47:57.542+08:00",
+                "UpdatedAt": "2024-05-20T14:47:57.542+08:00",
+                "DeletedAt": null,
+                "FavoriteID": 49645475901509,
+                "UID": 49645475577925,
+                "FName": "默认收藏夹",
+                "Description": "",
+                "IsPrivate": 1,
+                "Videos": []
+            },
+            {
+                "CreatedAt": "2024-05-20T14:47:57.548+08:00",
+                "UpdatedAt": "2024-05-20T14:47:57.548+08:00",
+                "DeletedAt": null,
+                "FavoriteID": 49645475901510,
+                "UID": 49645475577925,
+                "FName": "私密收藏夹",
+                "Description": "",
+                "IsPrivate": -1,
+                "Videos": []
+            }
+        ],
+        "comments": []
+    }
+}

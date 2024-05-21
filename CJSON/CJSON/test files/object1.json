@@ -1,0 +1,12 @@
+{
+  "string": "Hello, World!",
+  "number": 42,
+  "boolean": true,
+  "null_value": null,
+  "object": {
+    "nested_string": "This is a nested string",
+    "nested_number": 123,
+    "nested_boolean": false
+  },
+  "array": [1, 2, 3, "four", true, null]
+}

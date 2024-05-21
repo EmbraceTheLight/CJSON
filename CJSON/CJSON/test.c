@@ -25,20 +25,6 @@ void test_parse_string(void) {
 	}
 }
 
-void test_is_number(void) {
-	char* str = "-1230e-3abcvaunhfi nliaun g ";
-	double res = 0;
-	printf("original: %s\n", str);
-	bool isNum = is_number(str, &str, &res);
-	if (isNum != 0) {
-		printf("is number: %f\n", res);
-	}
-	else {
-		printf("is not number.");
-	}
-	printf("now,str: %s\n", str);
-}
-
 void test_json_string(void) {
 	char* res = handle_input();
 	Type t = check_arr_or_obj(res);
