@@ -27,7 +27,7 @@ KeyValue* find_by_key(Obj* obj, char* key);
 bool del_by_key(Obj* obj, char* key);
 
 // update_value 更新Obj对象中key对应的KeyValue对象的value值
-bool update_value(Obj* obj, char* key, void* value, Type type);
+bool update_value(Obj* obj,char*key);
 
 // add_key_value 添加KeyValue对象到Obj对象中
 bool create_key_value(Obj* obj);

@@ -1,6 +1,5 @@
 #pragma once
 #include "define.h"
-enum ValueType type;
 
 //查找token在字符串中的位置
 char* find_token(char* str, char token);

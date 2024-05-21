@@ -8,6 +8,10 @@ int main(void) {
 	//test_parse_array();
 
 	//test_json_string();
+	test_json_find();
+	test_json_addKV();
+	test_json_updateKV();
+	test_json_deleteKV();
 	return 0;
 }
 

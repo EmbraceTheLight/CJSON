@@ -51,3 +51,87 @@ void test_json_string(void) {
 	}
 }
 
+void test_json_find(void) {
+	char*ret = handle_input();
+	Obj*obj = parse_object(&ret);
+	if (!obj) {
+		printf("parse object failed.\n");
+		return;
+	}
+	printf("Now the object is:\n");
+	print_obj(obj);
+	while (1) {
+		char key[INIT_STR_SIZE];
+		printf("input key: ");
+		gets_s(key, INIT_STR_SIZE);
+		KeyValue* kv = find_by_key(obj, key);
+		if (!kv) {
+			printf("key not found.\n");
+			continue;
+		}
+		print_KeyValue(kv);
+	}
+}
+
+void test_json_addKV(void) {
+	char* ret = handle_input();
+	Obj* obj = parse_object(&ret);
+	if (!obj) {
+		printf("parse object failed.\n");
+		return;
+	}
+	printf("Now the object is:\n");
+	print_obj(obj);
+	while (1) {
+		bool ok = create_key_value(obj);
+		if (!ok) {
+			printf("create key value failed.\n");
+		}
+		printf("Now the object is:\n");
+		print_obj(obj);
+	}
+}
+
+void test_json_deleteKV(void) {
+	char* ret = handle_input();
+	Obj* obj = parse_object(&ret);
+	if (!obj) {
+		printf("parse object failed.\n");
+		return;
+	}
+	printf("Now the object is:\n");
+	print_obj(obj);
+	while (1) {
+		char key[INIT_STR_SIZE];
+		printf("input key: ");
+		gets_s(key, INIT_STR_SIZE);
+		bool ok  = del_by_key(obj,key);
+		if (!ok) {
+			printf("delete key value failed.\n");
+		}
+		printf("Now the object is:\n");
+		print_obj(obj);
+	}
+}
+
+void test_json_updateKV(void) {
+	char* ret = handle_input();
+	Obj* obj = parse_object(&ret);
+	if (!obj) {
+		printf("parse object failed.\n");
+		return;
+	}
+	printf("Now the object is:\n");
+	print_obj(obj);
+	while (1) {
+		char key[INIT_STR_SIZE];
+		printf("input key: ");
+		gets_s(key, INIT_STR_SIZE);
+		bool ok =update_value(obj,key);
+		if (!ok) {
+			printf("update key value failed.\n");
+		}
+		printf("Now the object is:\n");
+		print_obj(obj);
+	}
+}
