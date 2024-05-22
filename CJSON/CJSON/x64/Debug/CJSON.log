@@ -1,5 +1,5 @@
 ﻿  Unserialization.c
 D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(27,14): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(533,12): warning C4133: “=”: 从“Obj *”到“Obj *”的类型不兼容
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(663,23): warning C4018: “<”: 有符号/无符号不匹配
+D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(542,12): warning C4133: “=”: 从“Obj *”到“Obj *”的类型不兼容
+D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(672,23): warning C4018: “<”: 有符号/无符号不匹配
   CJSON.vcxproj -> D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\x64\Debug\CJSON.exe

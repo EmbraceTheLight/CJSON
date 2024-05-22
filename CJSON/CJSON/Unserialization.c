@@ -166,6 +166,8 @@ Obj* string2object(char** json_ptr) {
 	Obj* newObj = init_obj();
 
 	char* mov = *json_ptr;
+
+	mov = eat_space(mov);
 	mov = eat_space(mov+1);//到达第一个键值对的第一个字符
 
 	while (*mov != '}' && *mov != '\0') {
@@ -301,6 +303,7 @@ Array* string2array(char** json_ptr) {
 	Array* newArr = init_array();
 
 	char* mov = *json_ptr;
+	mov = eat_space(mov);
 	mov = eat_space(mov + 1);//到达第一个元素的第一个字符
 
 	while (*mov != ']' && *mov != '\0') {
@@ -484,6 +487,12 @@ bool create_key_value(Obj* obj) {
 		char* json_array = get_json(NULL);
 		char* del = json_array;
 		Array* parse_arr = string2array(&json_array);
+		if (parse_arr == NULL) {
+			printf("[Unserialization::create_key_value] parse array failed!\n");
+			free(del);
+			free(key);
+			return false;
+		}
 		obj->kvs[obj->nums].value.type = ARRAY;
 		obj->kvs[obj->nums].value.array = parse_arr;
 		obj->nums++;
