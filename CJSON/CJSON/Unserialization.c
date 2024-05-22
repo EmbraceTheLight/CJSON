@@ -1,6 +1,7 @@
 #include"helper.h"
 #include"Unserialization.h"
 static char* get_json(char* file_path) {
+	puts("Please input json string:");
 	char temp[BUFFER_SIZE];
 	char* json = (char*)calloc(INIT_STR_SIZE, sizeof(char));
 	if (json == NULL) {
@@ -165,7 +166,6 @@ static Array* check_ArrayJvsSize(Array* arr) {
 	return arr;
 }
 
-// parse_string 将json中的某段字符串提取出来
 char* parse_string(char** json_ptr) {
 	char* start = (*json_ptr) + 1; //start指向第一个双引号后的第一个字符
 	char* end = find_token(start, '"');
@@ -200,7 +200,6 @@ char* parse_string(char** json_ptr) {
 	return ret;
 }
 
-// parse_object 将json字符串解析为Obj对象
 Obj* parse_object(char** json_ptr) {
 	bool is_key = true;
 	Obj* newObj = init_obj();
@@ -448,16 +447,6 @@ Array* parse_array(char** json_ptr) {
 	return newArr;
 }
 
-/*对json内存对象的CRUD*/
-static int find_by_key_ret_index(Obj* obj, char* key) {
-	for (unsigned int i = 0; i < obj->nums; i++) {
-		if (strcmp(obj->kvs[i].key, key) == 0) {
-			return (int)i;
-		}
-	}
-	return -1;
-}
-
 bool create_key_value(Obj* obj) {
 	printf("Please input key of key-values:\n");
 	char* key = (char*)malloc(INIT_STR_SIZE * sizeof(char));
@@ -469,215 +458,239 @@ bool create_key_value(Obj* obj) {
 	obj->kvs[obj->nums].key = key;
 
 	printf("Please set value type:\n");
-	printf("1 is string\t\t2 is number\t\t3 is true\t\t4 is false\n\t\t5 is null\t\t6 is array\t\t7 is object\t\t0 is quit\n");
+	printf("1 is string\n2 is number\n3 is true\n4 is false\n5 is null\n6 is array\n7 is object\n0 is quit\n");
 	int select;
-	while ((scanf("%d", &select)) != 1 || (select < 0 || select > 7)) {
+	scanf("%d", &select);
+	while (getchar() != '\n');
+	while (select < 0 || select > 7) {
 		printf("Your choice is invalid.Please input number again:\n");
-		while (getchar() != '\n')
-			continue;
+		scanf("%d", &select);
+		while (getchar() != '\n');
 	}
-
+	
 	switch (select) {
-		case STRING: //string
-		{
-			printf("Please input string value:\n");
-			char* value = (char*)malloc(INIT_STR_SIZE * sizeof(char));
-			if (value == NULL) {
-				printf("[Unserialization::create_key_value] Malloc value failed!\n");
-				free(key);
-				return false;
-			}
-			gets_s(value, 1024);
-			obj->kvs[obj->nums].value.type = STRING;
-			obj->kvs[obj->nums].value.string = value;
-			obj->nums++;
-			obj = check_ObjKvsSize(obj);
-			break;
-		}
-		case NUMBER: //number
-		{
-			printf("Please input number value:\n");
-			double num;
-			while ((scanf("%lf", &num)) != 1) {
-				printf("Your input is invalid.Please input number again:\n");
-				while (getchar() != '\n')
-					continue;
-			}
-			obj->kvs[obj->nums].value.type = NUMBER;
-			obj->kvs[obj->nums].value.number = num;
-			obj->nums++;
-			obj = check_ObjKvsSize(obj);
-			break;
-		}
-		case TRUE: //true
-			obj->kvs[obj->nums].value.type = TRUE;
-			obj->kvs[obj->nums].value.boolean = true;
-			obj->nums++;
-			obj = check_ObjKvsSize(obj);
-			break;
-		case FALSE: //false
-			obj->kvs[obj->nums].value.type = FALSE;
-			obj->kvs[obj->nums].value.boolean = false;
-			obj->nums++;
-			obj = check_ObjKvsSize(obj);
-			break;
-		case NULLTYPE:
-			obj->kvs[obj->nums].value.type = NULLTYPE;
-			obj->kvs[obj->nums].value.null = NULL;
-			obj->nums++;
-			obj = check_ObjKvsSize(obj);
-			break;
-		case ARRAY:
-		{
-			char* json_array = get_json(NULL);
-			char* del = json_array;
-			Array* parse_arr = parse_array(&json_array);
-			obj->kvs[obj->nums].value.type = ARRAY;
-			obj->kvs[obj->nums].value.array = parse_arr;
-			obj->nums++;
-			free(json_array);
-			obj = check_ObjKvsSize(obj);
-			break;
-		}
-		case OBJECT:
-		{
-			char* json_object = get_json(NULL);
-			char* del = json_object;
-			Obj* parse_obj = parse_object(&json_object);
-			obj->kvs[obj->nums].value.type = OBJECT;
-			obj->kvs[obj->nums].value.object = (struct Obj*)parse_obj;
-			obj->nums++;
-			obj = check_ObjKvsSize(obj);
-			break;
-		}
-		case 0:
+	case STRING: //string
+	{
+		printf("Please input string value:\n");
+		char* value = (char*)malloc(INIT_STR_SIZE * sizeof(char));
+		if (value == NULL) {
+			printf("[Unserialization::create_key_value] Malloc value failed!\n");
 			free(key);
 			return false;
 		}
+		gets_s(value, 1024);
+		obj->kvs[obj->nums].value.type = STRING;
+		obj->kvs[obj->nums].value.string = value;
+		obj->nums++;
+		obj = check_ObjKvsSize(obj);
+		break;
+	}
+	case NUMBER: //number
+	{
+		printf("Please input number value:\n");
+		double num;
+		scanf("%lf", &num);
+		while (getchar() != '\n')
+			continue;
+		obj->kvs[obj->nums].value.type = NUMBER;
+		obj->kvs[obj->nums].value.number = num;
+		obj->nums++;
+		obj = check_ObjKvsSize(obj);
+		break;
+	}
+	case TRUE: //true
+		obj->kvs[obj->nums].value.type = TRUE;
+		obj->kvs[obj->nums].value.boolean = true;
+		obj->nums++;
+		obj = check_ObjKvsSize(obj);
+		break;
+	case FALSE: //false
+		obj->kvs[obj->nums].value.type = FALSE;
+		obj->kvs[obj->nums].value.boolean = false;
+		obj->nums++;
+		obj = check_ObjKvsSize(obj);
+		break;
+	case NULLTYPE:
+		obj->kvs[obj->nums].value.type = NULLTYPE;
+		obj->kvs[obj->nums].value.null = NULL;
+		obj->nums++;
+		obj = check_ObjKvsSize(obj);
+		break;
+	case ARRAY:
+	{
+		char* json_array = get_json(NULL);
+		char* del = json_array;
+		Array* parse_arr = parse_array(&json_array);
+		obj->kvs[obj->nums].value.type = ARRAY;
+		obj->kvs[obj->nums].value.array = parse_arr;
+		obj->nums++;
+		free(del);
+		obj = check_ObjKvsSize(obj);
+		break;
+	}
+	case OBJECT:
+	{
+		char* json_object = get_json(NULL);
+		char* del = json_object;
+		Obj* parse_obj = parse_object(&json_object);
+		obj->kvs[obj->nums].value.type = OBJECT;
+		obj->kvs[obj->nums].value.object = (struct Obj*)parse_obj;
+		obj->nums++;
+		free(del);
+		obj = check_ObjKvsSize(obj);
+		break;
+	}
+	case 0:
+		free(key);
+		return false;
+	}
 	return true;
 }
 
-KeyValue* find_by_key(Obj* obj, char* key) {
-	int index = find_by_key_ret_index(obj, key);
-	if (index != -1)
-		return &(obj->kvs[index]);
-	else
-		return NULL;
+Obj* find_by_key(Obj* obj, char* key,int* index) {
+	char* cur = strtok(key, ".");
+	Obj* curObj = obj;
+	Obj* ret = NULL;
+	/*KeyValue* kv = NULL;*/
+
+	while (cur) {
+		bool is_find = false;  //表明当前对象是否有找到key
+		unsigned int i = 0;
+		//遍历当前对象
+		for (i=0; i < curObj->nums; i++) {
+			if (strcmp(curObj->kvs[i].key, cur) == 0) {
+				ret = curObj;
+				curObj = curObj->kvs[i].value.object;
+				*index = i;
+				is_find = true;
+				break;
+			}
+		}
+		if (!is_find) {
+			return NULL;
+		}
+		cur = strtok(NULL, ".");
+		
+	}
+	return ret;
 }
 
-static void help_cleaner(JsonValue jv) { //将原来的内存释放掉
+//将原来的内存释放掉
+static void help_cleaner(JsonValue jv) {
 	switch (jv.type) {
-		case STRING:
-			cleanup((void*)jv.string, STRING);
-			break;
-		case OBJECT:
-			cleanup((void*)jv.object, OBJECT);
-			break;
-		case ARRAY:
-			cleanup((void*)jv.array, ARRAY);
-			break;
+	case STRING:
+		cleanup((void*)jv.string, STRING);
+		break;
+	case OBJECT:
+		cleanup((void*)jv.object, OBJECT);
+		break;
+	case ARRAY:
+		cleanup((void*)jv.array, ARRAY);
+		break;
 	}
 }
-bool update_value(Obj* obj,char*key) {
-	int idx = find_by_key_ret_index(obj, key);
-	if (idx == -1) {
+bool update_value(Obj* obj, char* key) {
+	int i;
+	Obj* object = find_by_key(obj, key,&i);
+	if (!object) {
 		fprintf(stderr, "No such key:%s\n", key);
 		return false;
 	}
 
 	printf("Please set value type:\n");
-	printf("1 is string\t\t2 is number\t\t3 is true\t\t4 is false\n\t\t5 is null\t\t6 is array\t\t7 is object\t\t0 is quit\n");
+	printf("1 is string\n2 is number\n3 is true\n4 is false\n5 is null\n6 is array\n7 is object\n0 is quit\n");
 	int select;
-	while ((scanf("%d", &select)) != 1 || (select < 0 || select > 7)) {
-		printf("Your choice is invalid.Please input number again:\n");
-		while (getchar() != '\n')
-			continue;
-	}
+	scanf("%d", &select);
+	while (getchar() != '\n');
+
 	switch (select) { //注意原来内存空间的释放
-		case STRING:
-		{
-			char* newStr = (char*)malloc(INIT_STR_SIZE*sizeof(char));
-			if (!newStr) {
-				printf("[Unserialization::update_value] Malloc newStr failed!\n");
-				return false;
-			}
-			gets_s(newStr, INIT_STR_SIZE);
-			help_cleaner(obj->kvs[idx].value);
-			obj->kvs[idx].value.type = STRING;
-			obj->kvs[idx].value.string = newStr;
-			break;
+	case STRING:
+	{
+		char* newStr = (char*)malloc(INIT_STR_SIZE * sizeof(char));
+		puts("Please input string value:\n");
+		if (!newStr) {
+			printf("[Unserialization::update_value] Malloc newStr failed!\n");
+			return false;
 		}
-		case NUMBER:
-			help_cleaner(obj->kvs[idx].value);
-			printf("Please input number value:\n");
-			double d = 0;
-			while ((scanf("%lf", &d)) != 1) {
-				printf("Your input is invalid.Please input number again:\n");
-				while (getchar() != '\n')
-					continue;
-			}
-			obj->kvs[idx].value.type = NUMBER;
-			obj->kvs[idx].value.number = d;
-			break;
-		case TRUE:
-			help_cleaner(obj->kvs[idx].value);
-			obj->kvs[idx].value.type = TRUE;
-			obj->kvs[idx].value.boolean = true;
-			break;
-		case FALSE:
-			help_cleaner(obj->kvs[idx].value);
-			obj->kvs[idx].value.type = FALSE;
-			obj->kvs[idx].value.boolean = false;
-			break;
-		case NULLTYPE:
-			help_cleaner(obj->kvs[idx].value);
-			obj->kvs[idx].value.type = NULLTYPE;
-			obj->kvs[idx].value.null = NULL;
-			break;
-		case OBJECT:
-		{
-			char* value = get_json(NULL);
-			char* del = value;
-			Obj* parse_obj = parse_object(&value);
-			if (parse_obj == NULL) {
-				fprintf(stderr, "[Unserialization::update_value] parse object failed!\n");
-				free(del);
-				return false;
-			}
-			help_cleaner(obj->kvs[idx].value);
+		gets_s(newStr, INIT_STR_SIZE);
+		help_cleaner(object->kvs[i].value);
+		object->kvs[i].value.type = STRING;
+		object->kvs[i].value.string = newStr;
+		break;
+	}
+	case NUMBER:
+	{
+		help_cleaner(object->kvs[i].value);
+		printf("Please input number value:\n");
+		double d = 0;
+		scanf("%lf", &d);
+		while (getchar() != '\n');
+		object->kvs[i].value.type = NUMBER;
+		object->kvs[i].value.number = d;
+		break;
+	}
+	case TRUE:
+		help_cleaner(object->kvs[i].value);
+		object->kvs[i].value.type = TRUE;
+		object->kvs[i].value.boolean = true;
+		break;
+	case FALSE:
+		help_cleaner(object->kvs[i].value);
+		object->kvs[i].value.type = FALSE;
+		object->kvs[i].value.boolean = false;
+		break;
+	case NULLTYPE:
+		help_cleaner(object->kvs[i].value);
+		object->kvs[i].value.type = NULLTYPE;
+		object->kvs[i].value.null = NULL;
+		break;
+	case OBJECT:
+	{
+		char* value = get_json(NULL);
+		char* del = value;
+		Obj* parse_obj = parse_object(&value);
+		if (parse_obj == NULL) {
+			fprintf(stderr, "[Unserialization::update_value] parse object failed!\n");
 			free(del);
-			obj->kvs[idx].value.type = OBJECT;
-			obj->kvs[idx].value.object = (struct Obj*)parse_obj;
-			break;
+			return false;
 		}
-		case ARRAY:
-		{
-			char* value = get_json(NULL);
-			char* del = value;
-			Array* arr = parse_array(&value);
-			if (arr == NULL) {
-				fprintf(stderr, "[Unserialization::update_value] parse array failed!\n");
-				free(del);
-				return false;
-			}
-			help_cleaner(obj->kvs[idx].value);
+		help_cleaner(object->kvs[i].value);
+		free(del);
+		object->kvs[i].value.type = OBJECT;
+		object->kvs[i].value.object = (struct Obj*)parse_obj;
+		break;
+	}
+	case ARRAY:
+	{
+		char* value = get_json(NULL);
+		char* del = value;
+		Array* arr = parse_array(&value);
+		if (arr == NULL) {
+			fprintf(stderr, "[Unserialization::update_value] parse array failed!\n");
 			free(del);
-			obj->kvs[idx].value.type = ARRAY;
-			obj->kvs[idx].value.array = arr;
-			break;
+			return false;
 		}
+		help_cleaner(object->kvs[i].value);
+		free(del);
+		object->kvs[i].value.type = ARRAY;
+		object->kvs[i].value.array = arr;
+		break;
+	}
 	}
 	return true;
 }
 
 bool del_by_key(Obj* obj, char* key) {
-	int index = find_by_key_ret_index(obj, key);
-	if (index != -1) {
+	int idx;
+	Obj* object = find_by_key(obj, key,&idx);
+	if (!object) {
 		printf("No such key:%s\n", key);
 		return false;
 	}
 	else {
-		for (int i = index; i < obj->nums - 1; i++) {
+		help_cleaner(object->kvs[idx].value);
+		free(object->kvs[idx].key);
+		for (int i = idx; i < object->nums - 1; i++) {
 			obj->kvs[i] = obj->kvs[i + 1];
 		}
 		obj->nums--;

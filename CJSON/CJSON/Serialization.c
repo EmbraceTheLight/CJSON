@@ -119,7 +119,7 @@ char* object2string(Obj* obj) {
 			json[jlen++] = '"';
 			json[jlen++] = ':';
 
-			char* line = array2string(kv.value.object);
+			char* line = array2string(kv.value.array);
 			size_t line_length = strlen(line);
 			if (jlen + line_length + ADDITIONAL_SPACE >= jsize) {
 				while (jlen + line_length + ADDITIONAL_SPACE >= jsize) { //¶Ô×Ö·û´®½øÐÐÀ©ÈÝ

@@ -1,7 +1,7 @@
 #pragma once
 #include "define.h"
 
-//查找token在字符串中的位置
+//查找token在字符串中的位置,返回字符串的起始位置。若token不存在，返回NULL
 char* find_token(char* str, char token);
 
 // 判断json值类型null或者boolean是否为合法的
@@ -30,6 +30,9 @@ size_t num_of_escape_char(const char* str, const char* end);
 
 // my_strcpy 字符串复制，并能处理转义字符
 char* my_strcpy(char* dst,const char* start,const char* end);
+
+// get_substr 获取子从start至(end-1)的子字符串
+char* get_substr(char* start, char* end);
 
 // cleanup 释放内存
 void cleanup(void*json,Type type);

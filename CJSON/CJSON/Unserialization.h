@@ -21,7 +21,7 @@ char* parse_string(char** json_ptr);
 Array* parse_array(char** json_ptr);
 
 // find_by_key 在Obj对象中查找key对应的KeyValue对象
-KeyValue* find_by_key(Obj* obj, char* key);
+Obj* find_by_key(Obj* obj, char* key, int* index);
 
 // del_by_key 删除Obj对象中key对应的KeyValue对象
 bool del_by_key(Obj* obj, char* key);

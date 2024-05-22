@@ -25,7 +25,7 @@ void test_parse_string(void) {
 	}
 }
 
-void test_json_string(void) {
+void test_parse_json_string(void) {
 	char* res = handle_input();
 	Type t = check_arr_or_obj(res);
 	if (t == OBJECT) {
@@ -60,17 +60,19 @@ void test_json_find(void) {
 	}
 	printf("Now the object is:\n");
 	print_obj(obj);
-	while (1) {
+	for (int i = 0; i < 5; i++) {
 		char key[INIT_STR_SIZE];
 		printf("input key: ");
 		gets_s(key, INIT_STR_SIZE);
-		KeyValue* kv = find_by_key(obj, key);
-		if (!kv) {
+		int i;
+		Obj* o = find_by_key(obj, key,&i);
+		if (!o) {
 			printf("key not found.\n");
 			continue;
 		}
-		print_KeyValue(kv);
+		print_KeyValue(&o->kvs[i]);
 	}
+	cleanup(obj, OBJECT);
 }
 
 void test_json_addKV(void) {
@@ -82,7 +84,7 @@ void test_json_addKV(void) {
 	}
 	printf("Now the object is:\n");
 	print_obj(obj);
-	while (1) {
+	for (int i = 0; i < 5; i++) {
 		bool ok = create_key_value(obj);
 		if (!ok) {
 			printf("create key value failed.\n");
@@ -90,6 +92,7 @@ void test_json_addKV(void) {
 		printf("Now the object is:\n");
 		print_obj(obj);
 	}
+	cleanup(obj, OBJECT);
 }
 
 void test_json_deleteKV(void) {
@@ -101,7 +104,7 @@ void test_json_deleteKV(void) {
 	}
 	printf("Now the object is:\n");
 	print_obj(obj);
-	while (1) {
+	for(int i = 0; i < 5; i++) {
 		char key[INIT_STR_SIZE];
 		printf("input key: ");
 		gets_s(key, INIT_STR_SIZE);
@@ -112,6 +115,7 @@ void test_json_deleteKV(void) {
 		printf("Now the object is:\n");
 		print_obj(obj);
 	}
+	cleanup(obj, OBJECT);
 }
 
 void test_json_updateKV(void) {
@@ -123,7 +127,7 @@ void test_json_updateKV(void) {
 	}
 	printf("Now the object is:\n");
 	print_obj(obj);
-	while (1) {
+	for (int i = 0; i < 5; i++) {
 		char key[INIT_STR_SIZE];
 		printf("input key: ");
 		gets_s(key, INIT_STR_SIZE);
@@ -134,4 +138,5 @@ void test_json_updateKV(void) {
 		printf("Now the object is:\n");
 		print_obj(obj);
 	}
+	cleanup(obj, OBJECT);
 }

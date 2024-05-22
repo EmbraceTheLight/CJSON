@@ -25,6 +25,23 @@ static bool strncmp_ignore_case(const char* str1, const char* str2, size_t cmp_l
 	return true;
 }
 
+char* get_substr(char* start, char* end) {
+	size_t len = end - start + 1;
+	char* res = (char*)malloc(len * sizeof(char));
+	if (!res) {
+		fprintf(stderr, "[helper::get_substr] Malloc tmp failed!\n");
+		return NULL;
+	}
+	char* t = my_strcpy(res, start, end);
+	if (!t) {
+		printf("[helper::get_substr] Copy string failed!\n");
+		free(res);
+		return NULL;
+	}
+	res[end - start] = '\0';
+	return res;
+}
+
 char* make_value_string(char* key, char* value, bool is_obj_arr) {
 	size_t vs_len = strlen(value) + strlen(key) + 6;//两个字符串的长度加上两对双引号的长度和冒号的长度，以及一个'\0'
 	char* vs = (char*)calloc(vs_len, sizeof(char));
@@ -202,12 +219,15 @@ static void free_array(Array* arr) {
 		JsonValue val = arr->jvs[i];
 		if (val.type == ARRAY) {
 			free_array(val.array);
+			printf("[helper::free_array] free array success!\n");
 		}
 		else if (val.type == OBJECT) {
 			free_object(val.object);
+			printf("[helper::free_array] free object success!\n");
 		}
 		else if (val.type == STRING) {
 			free(val.string);
+			printf("[helper::free_array] free string success!\n");
 		}
 	}
 	free(arr->jvs);
@@ -218,20 +238,23 @@ static void free_array(Array* arr) {
 static void free_object(Obj* obj) {
 	for (unsigned int i = 0; i < obj->nums; i++) {
 		KeyValue kv = obj->kvs[i];
+		free(kv.key);
 		if (kv.value.type == ARRAY) {
 			free_array(kv.value.array);
+			printf("[helper::free_object] free array success!\n");
 		}
 		else if (kv.value.type == OBJECT) {
 			free_object(kv.value.object);
+			printf("[helper::free_object] free object success!\n");
 		}
 		else if (kv.value.type == STRING) {
 			free(kv.value.string);
+			printf("[helper::free_object] free string success!\n");
 		}
-		free(kv.key);
 	}
 	free(obj->kvs);
 	free(obj);
-	printf("[helper::free_object] free object success!\n");
+	puts("[helper::free_object] free object success!");
 }
 
 void cleanup(void* json, Type type) {
@@ -244,4 +267,5 @@ void cleanup(void* json, Type type) {
 	else if (type == STRING) {
 		free((char*)json);
 	}
+	puts("[helper::cleanup] free success!");
 }

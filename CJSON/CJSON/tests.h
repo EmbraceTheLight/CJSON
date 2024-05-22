@@ -6,7 +6,7 @@ void test_handle_input(void);
 void test_parse_string(void);
 
 //解析JSON 的测试用例
-void test_json_string(void);
+void test_parse_json_string(void);
 
 // 针对 JSON 反序列化得到的内存对象的CRUD测试
 void test_json_find(void);
