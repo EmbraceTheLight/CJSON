@@ -1,7 +1,10 @@
 #include"Serialization.h"
 #include"Unserialization.h"
 #include"tests.h"
-#include<vld.h>
+#ifdef DEBUG
+	#include<vld.h>
+#endif // DEBUG
+
 int main(void) {
 	//test_handle_input();  
 	//test_parse_json_string();
