@@ -53,6 +53,10 @@ void test_parse_json_string(void) {
 
 void test_json_find(void) {
 	char*ret = handle_input();
+	if (ret == NULL) {
+		fprintf(stderr,"input failed.\n");
+		return;
+	}
 	Obj*obj = parse_object(&ret);
 	if (!obj) {
 		printf("parse object failed.\n");
@@ -77,6 +81,10 @@ void test_json_find(void) {
 
 void test_json_addKV(void) {
 	char* ret = handle_input();
+	if (ret == NULL) {
+		fprintf(stderr, "input failed.\n");
+		return;
+	}
 	Obj* obj = parse_object(&ret);
 	if (!obj) {
 		printf("parse object failed.\n");
@@ -97,6 +105,10 @@ void test_json_addKV(void) {
 
 void test_json_deleteKV(void) {
 	char* ret = handle_input();
+	if (ret == NULL) {
+		fprintf(stderr, "input failed.\n");
+		return;
+	}
 	Obj* obj = parse_object(&ret);
 	if (!obj) {
 		printf("parse object failed.\n");
@@ -120,6 +132,10 @@ void test_json_deleteKV(void) {
 
 void test_json_updateKV(void) {
 	char* ret = handle_input();
+	if (ret == NULL) {
+		fprintf(stderr, "input failed.\n");
+		return;
+	}
 	Obj* obj = parse_object(&ret);
 	if (!obj) {
 		printf("parse object failed.\n");
