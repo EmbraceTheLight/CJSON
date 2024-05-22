@@ -8,6 +8,5 @@
 	"nested_number":123,
 	"nested_boolean":false
 },
-	"array":[ 1, 2, 3, "four", true, null ],
-	"aaa":"dgvdb b"
+	"array":[ 1, 2, 3, "four", true, null ]
 }

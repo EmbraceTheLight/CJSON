@@ -11,8 +11,6 @@ static void ask_if_save_file(Obj* obj) {
 		printf("input the file path to save the json:");
 		char path[INIT_STR_SIZE];
 		gets_s(path, INIT_STR_SIZE);
-
-		while (getchar() != '\n');
 		char* json_str = object2string(obj);
 		FILE* fp = fopen(path, "w");
 		if (!fp) {
@@ -31,13 +29,6 @@ static void ask_if_modify_JsonObj(Obj* obj) {
 
 	if (c == 'y' || c == 'Y') {
 		while (1) {
-			printf("Enter y to continue modifying object");
-			char c = getchar();
-			while (getchar() != '\n');
-			if (c != 'y' && c != 'Y') {
-				break;
-			}
-
 			int select;
 			printf("1. add key-value pair\n2. modify key-value pair\n3. delete key-value pair\n4. exit\n");
 			printf("select the item to modify:\n");
@@ -84,6 +75,13 @@ static void ask_if_modify_JsonObj(Obj* obj) {
 			}
 			printf("Now the obj is:\n");
 			print_obj(obj);
+			printf("Enter y to continue modifying object:");
+			char c = getchar();
+			while (getchar() != '\n');
+			if (c != 'y' && c != 'Y') {
+				break;
+			}
+
 		}
 		
 	}
