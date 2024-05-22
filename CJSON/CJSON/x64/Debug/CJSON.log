@@ -1,2 +1,3 @@
-﻿  test.c
+﻿  print.c
+D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\print.c(176,22): warning C4133: “函数”: 从“Obj *”到“Obj *”的类型不兼容
   CJSON.vcxproj -> D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\x64\Debug\CJSON.exe

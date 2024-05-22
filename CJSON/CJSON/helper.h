@@ -1,6 +1,12 @@
 #pragma once
 #include "define.h"
 
+// init_obj 初始化Obj对象
+Obj* init_obj();
+
+// init_array 初始化Array对象
+Array* init_array();
+
 //查找token在字符串中的位置,返回字符串的起始位置。若token不存在，返回NULL
 char* find_token(char* str, char token);
 

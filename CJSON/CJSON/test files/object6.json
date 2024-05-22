@@ -1,0 +1,13 @@
+{
+	"aaa":"111",
+	"bbb":222,
+	"ccc":true,
+	"ddd":false,
+	"eee":null,
+	"fff":[ "apple", 123, true, 
+  {
+	"name":"Alice",
+	"age":25
+},
+ true, false, null, [ "a", "b", "c" ] ]
+}

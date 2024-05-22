@@ -1,4 +1,3 @@
-#include"helper.h"
 #include"Unserialization.h"
 static char* get_json(char* file_path) {
 	puts("Please input json string:");
@@ -68,44 +67,6 @@ char* handle_input(void) {
 		}
 	}
 	return json;
-}
-
-// init_obj 初始化Obj
-Obj* init_obj() {
-	Obj* ret = (Obj*)malloc(1 * sizeof(Obj));
-	if (ret == NULL) {
-		printf("[Unserialization::init_obj] Init Obj failed!\n");
-		return NULL;
-	}
-	ret->nums = 0;
-	ret->size = INIT_OBJ_NUMS;
-	ret->kvs = (KeyValue*)malloc(INIT_OBJ_NUMS * sizeof(KeyValue));
-	if (ret->kvs == NULL) {
-		printf("[Unserialization::init_obj] Init KeyValue failed!\n");
-		free(ret->kvs);
-		ret->kvs = NULL;
-		return NULL;
-	}
-	return ret;
-}
-
-// init_array 初始化Array
-Array* init_array() {
-	Array* ret = (Array*)malloc(1 * sizeof(Array));
-	if (ret == NULL) {
-		printf("[Unserialization::init_array] Init Array failed!\n");
-		return NULL;
-	}
-	ret->nums = 0;
-	ret->size = INIT_ARRAY_NUMS;
-	ret->jvs = (JsonValue*)malloc(INIT_ARRAY_NUMS * sizeof(JsonValue));
-	if (ret->jvs == NULL) {
-		printf("[Unserialization::init_array] Init KeyValue failed!\n");
-		free(ret->jvs);
-		ret->jvs = NULL;
-		return NULL;
-	}
-	return ret;
 }
 
 // resize_objKvs 对obj的kvs进行扩容
@@ -200,12 +161,12 @@ char* parse_string(char** json_ptr) {
 	return ret;
 }
 
-Obj* parse_object(char** json_ptr) {
+Obj* string2object(char** json_ptr) {
 	bool is_key = true;
 	Obj* newObj = init_obj();
 
 	char* mov = *json_ptr;
-	mov = eat_space(mov + 1);//到达第一个键值对的第一个字符
+	mov = eat_space(mov+1);//到达第一个键值对的第一个字符
 
 	while (*mov != '}' && *mov != '\0') {
 		switch (*mov) {
@@ -245,7 +206,7 @@ Obj* parse_object(char** json_ptr) {
 			break;
 		case '{': //匹配到左大括号，说明发现嵌套object
 		{
-			Obj* parsedObj = parse_object(&mov);
+			Obj* parsedObj = string2object(&mov);
 			if (parsedObj == NULL) {
 				printf("[Unserialization::parse_object] parse object failed!\n");
 				cleanup((void*)newObj, OBJECT);
@@ -260,7 +221,7 @@ Obj* parse_object(char** json_ptr) {
 		}
 		case '['://匹配到左中括号，说明发现嵌套数组
 		{
-			Array* parsedArr = parse_array(&mov);
+			Array* parsedArr = string2array(&mov);
 			if (parsedArr == NULL) {
 				printf("[Unserialization::parse_object] parse array failed!\n");
 				cleanup((void*)newObj, OBJECT);
@@ -336,7 +297,7 @@ Obj* parse_object(char** json_ptr) {
 	return newObj;
 }
 
-Array* parse_array(char** json_ptr) {
+Array* string2array(char** json_ptr) {
 	Array* newArr = init_array();
 
 	char* mov = *json_ptr;
@@ -360,7 +321,7 @@ Array* parse_array(char** json_ptr) {
 		}
 		case '{': //匹配到左大括号，说明发现嵌套object
 		{
-			Obj* parsedObj = parse_object(&mov);
+			Obj* parsedObj = string2object(&mov);
 			if (parsedObj == NULL) {
 				printf("[Unserialization::parse_array] parse object failed!\n");
 				cleanup((void*)newArr, ARRAY);
@@ -374,7 +335,7 @@ Array* parse_array(char** json_ptr) {
 		}
 		case '['://匹配到左中括号，说明发现嵌套数组
 		{
-			Array* parsedArr = parse_array(&mov);
+			Array* parsedArr = string2array(&mov);
 			if (parsedArr == NULL) {
 				printf("[Unserialization::parse_array] parse array failed!\n");
 				cleanup((void*)newArr, ARRAY);
@@ -462,6 +423,7 @@ bool create_key_value(Obj* obj) {
 	int select;
 	scanf("%d", &select);
 	while (getchar() != '\n');
+
 	while (select < 0 || select > 7) {
 		printf("Your choice is invalid.Please input number again:\n");
 		scanf("%d", &select);
@@ -520,7 +482,7 @@ bool create_key_value(Obj* obj) {
 	{
 		char* json_array = get_json(NULL);
 		char* del = json_array;
-		Array* parse_arr = parse_array(&json_array);
+		Array* parse_arr = string2array(&json_array);
 		obj->kvs[obj->nums].value.type = ARRAY;
 		obj->kvs[obj->nums].value.array = parse_arr;
 		obj->nums++;
@@ -532,7 +494,7 @@ bool create_key_value(Obj* obj) {
 	{
 		char* json_object = get_json(NULL);
 		char* del = json_object;
-		Obj* parse_obj = parse_object(&json_object);
+		Obj* parse_obj = string2object(&json_object);
 		obj->kvs[obj->nums].value.type = OBJECT;
 		obj->kvs[obj->nums].value.object = (struct Obj*)parse_obj;
 		obj->nums++;
@@ -544,6 +506,7 @@ bool create_key_value(Obj* obj) {
 		free(key);
 		return false;
 	}
+	printf("create key-value success\n");
 	return true;
 }
 
@@ -648,7 +611,7 @@ bool update_value(Obj* obj, char* key) {
 	{
 		char* value = get_json(NULL);
 		char* del = value;
-		Obj* parse_obj = parse_object(&value);
+		Obj* parse_obj = string2object(&value);
 		if (parse_obj == NULL) {
 			fprintf(stderr, "[Unserialization::update_value] parse object failed!\n");
 			free(del);
@@ -664,7 +627,7 @@ bool update_value(Obj* obj, char* key) {
 	{
 		char* value = get_json(NULL);
 		char* del = value;
-		Array* arr = parse_array(&value);
+		Array* arr = string2array(&value);
 		if (arr == NULL) {
 			fprintf(stderr, "[Unserialization::update_value] parse array failed!\n");
 			free(del);

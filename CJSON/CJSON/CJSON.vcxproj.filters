@@ -66,5 +66,6 @@
     <None Include="test files\object2.json" />
     <None Include="test files\object3.json" />
     <None Include="test files\object4.json" />
+    <None Include="test files\object5.json" />
   </ItemGroup>
 </Project>

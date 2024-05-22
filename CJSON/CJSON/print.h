@@ -1,6 +1,8 @@
 #pragma once
 #include "define.h"
 
+void main_menu();
+
 //¥Ú”°JSON Object
 void print_obj(Obj* obj);
 

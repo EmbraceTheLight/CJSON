@@ -29,7 +29,7 @@ void test_parse_json_string(void) {
 	char* res = handle_input();
 	Type t = check_arr_or_obj(res);
 	if (t == OBJECT) {
-		Obj* obj = parse_object(&res);
+		Obj* obj = string2object(&res);
 		if (obj != NULL) {
 			print_obj(obj);
 		}
@@ -38,7 +38,7 @@ void test_parse_json_string(void) {
 		}
 	}
 	else if (t == ARRAY) {
-		Array* arr = parse_array(&res);
+		Array* arr = string2array(&res);
 		if (arr != NULL) {
 			print_arr(arr);
 		}
@@ -57,7 +57,7 @@ void test_json_find(void) {
 		fprintf(stderr,"input failed.\n");
 		return;
 	}
-	Obj*obj = parse_object(&ret);
+	Obj*obj = string2object(&ret);
 	if (!obj) {
 		printf("parse object failed.\n");
 		return;
@@ -85,7 +85,7 @@ void test_json_addKV(void) {
 		fprintf(stderr, "input failed.\n");
 		return;
 	}
-	Obj* obj = parse_object(&ret);
+	Obj* obj = string2object(&ret);
 	if (!obj) {
 		printf("parse object failed.\n");
 		return;
@@ -109,7 +109,7 @@ void test_json_deleteKV(void) {
 		fprintf(stderr, "input failed.\n");
 		return;
 	}
-	Obj* obj = parse_object(&ret);
+	Obj* obj = string2object(&ret);
 	if (!obj) {
 		printf("parse object failed.\n");
 		return;
@@ -136,7 +136,7 @@ void test_json_updateKV(void) {
 		fprintf(stderr, "input failed.\n");
 		return;
 	}
-	Obj* obj = parse_object(&ret);
+	Obj* obj = string2object(&ret);
 	if (!obj) {
 		printf("parse object failed.\n");
 		return;

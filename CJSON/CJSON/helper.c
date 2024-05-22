@@ -5,6 +5,42 @@ static char* null_str = "null";
 
 const char* escape = "\"\\/bfnrt";
 
+Obj* init_obj() {
+	Obj* ret = (Obj*)malloc(1 * sizeof(Obj));
+	if (ret == NULL) {
+		printf("[Unserialization::init_obj] Init Obj failed!\n");
+		return NULL;
+	}
+	ret->nums = 0;
+	ret->size = INIT_OBJ_NUMS;
+	ret->kvs = (KeyValue*)malloc(INIT_OBJ_NUMS * sizeof(KeyValue));
+	if (ret->kvs == NULL) {
+		printf("[Unserialization::init_obj] Init KeyValue failed!\n");
+		free(ret->kvs);
+		ret->kvs = NULL;
+		return NULL;
+	}
+	return ret;
+}
+
+Array* init_array() {
+	Array* ret = (Array*)malloc(1 * sizeof(Array));
+	if (ret == NULL) {
+		printf("[Unserialization::init_array] Init Array failed!\n");
+		return NULL;
+	}
+	ret->nums = 0;
+	ret->size = INIT_ARRAY_NUMS;
+	ret->jvs = (JsonValue*)malloc(INIT_ARRAY_NUMS * sizeof(JsonValue));
+	if (ret->jvs == NULL) {
+		printf("[Unserialization::init_array] Init KeyValue failed!\n");
+		free(ret->jvs);
+		ret->jvs = NULL;
+		return NULL;
+	}
+	return ret;
+}
+
 char* find_token(char* str, char token) {
 	char* ret = strchr(str, token);
 	if (ret == NULL) {

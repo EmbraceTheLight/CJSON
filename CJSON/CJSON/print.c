@@ -1,6 +1,130 @@
 #include "print.h"
 #include "helper.h"
 #include "Serialization.h"
+
+static void ask_if_save_file(Obj* obj) {
+	printf("Do you want to save this json?[y/n]");
+	char c = getchar();
+	while (getchar() != '\n');
+
+	if (c == 'y' || c == 'Y') {
+		printf("input the file path to save the json:");
+		char path[INIT_STR_SIZE];
+		gets_s(path, INIT_STR_SIZE);
+
+		while (getchar() != '\n');
+		char* json_str = object2string(obj);
+		FILE* fp = fopen(path, "w");
+		if (!fp) {
+			perror("create file failed:");
+			return;
+		}
+		fputs(object2string(obj), fp);
+		fclose(fp);
+		printf("json object saved to %s success\n", path);
+	}
+}
+static void ask_if_modify_JsonObj(Obj* obj) {
+	printf("Do you want to modify this json object?[y/n]");
+	char c = getchar();
+	while (getchar() != '\n');
+
+	if (c == 'y' || c == 'Y') {
+		while (1) {
+			printf("Enter y to continue modifying object");
+			char c = getchar();
+			while (getchar() != '\n');
+			if (c != 'y' && c != 'Y') {
+				break;
+			}
+
+			int select;
+			printf("1. add key-value pair\n2. modify key-value pair\n3. delete key-value pair\n4. exit\n");
+			printf("select the item to modify:\n");
+			scanf("%d", &select);
+			while (getchar() != '\n');
+			if (select == 4)
+				break;
+			switch (select) {
+			case 1:
+			{
+				bool ok = create_key_value(obj);
+				if (!ok) {
+					fprintf(stderr, "create key-value pair failed.\n");
+				}
+				break;
+			}
+			case 2:
+			{
+				char key[INIT_STR_SIZE];
+				printf("input the key to update:");
+				gets_s(key, INIT_STR_SIZE);
+				bool ok = update_value(obj, key);
+				if (!ok) {
+					fprintf(stderr, "modify key-value pair failed.\n");
+				}
+				break;
+			}
+			case 3:
+			{
+				char key[INIT_STR_SIZE];
+				printf("input the key to delete:");
+				gets_s(key, INIT_STR_SIZE);
+				bool ok = del_by_key(obj, key);
+				if (!ok) {
+					fprintf(stderr, "delete key-value pair failed.\n");
+				}
+				break;
+			}
+			case 4:
+				break;
+			default:
+				printf("invalid select.\n");
+				break;
+			}
+			printf("Now the obj is:\n");
+			print_obj(obj);
+		}
+		
+	}
+}
+void main_menu() {
+	printf("welcome to use this json tool.\n");
+	printf("enter your select:\n");
+	printf("1. create json object\n");
+	printf("2. parse json string to object\n");
+	printf("3. exit\n");
+	int select;
+	Obj* obj = NULL;
+	scanf("%d", &select);
+	while (getchar() != '\n');
+	switch (select) {
+	case 1:
+	{
+		obj = create_obj();
+		ask_if_save_file(obj);
+		break;
+	}
+	case 2:
+	{
+		char* res = handle_input();
+		char* del = res;
+		obj = string2object(&res);
+		printf("parsed object is:\n");
+		print_obj(obj);
+		free(del);
+		ask_if_modify_JsonObj(obj);
+		ask_if_save_file(obj);
+		break;
+	}
+	case 3:
+		break;
+	}
+	if (obj)
+		cleanup(obj, OBJECT);
+	printf("bye");
+}
+
 void print_obj(Obj* obj) {
 	char* json_str = object2string(obj);
 	if (json_str != NULL) {
