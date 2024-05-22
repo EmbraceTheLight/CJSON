@@ -15,6 +15,7 @@ static void ask_if_save_file(Obj* obj) {
 		FILE* fp = fopen(path, "w");
 		if (!fp) {
 			perror("create file failed:");
+			free(json_str);
 			return;
 		}
 		fputs(json_str, fp);
