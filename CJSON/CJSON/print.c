@@ -17,8 +17,9 @@ static void ask_if_save_file(Obj* obj) {
 			perror("create file failed:");
 			return;
 		}
-		fputs(object2string(obj), fp);
+		fputs(json_str, fp);
 		fclose(fp);
+		free(json_str);
 		printf("json object saved to %s success\n", path);
 	}
 }
@@ -100,6 +101,10 @@ void main_menu() {
 	case 1:
 	{
 		obj = create_obj();
+		if (!obj) {
+			printf("create json object failed.\n");
+			break;
+		}
 		ask_if_save_file(obj);
 		break;
 	}
@@ -108,6 +113,11 @@ void main_menu() {
 		char* res = handle_input();
 		char* del = res;
 		obj = string2object(&res);
+		if (!obj) {
+			printf("parse json string to object failed.\n");
+			free(del);
+			break;
+		}
 		printf("parsed object is:\n");
 		print_obj(obj);
 		free(del);
@@ -120,7 +130,7 @@ void main_menu() {
 	}
 	if (obj)
 		cleanup(obj, OBJECT);
-	printf("bye");
+	puts("bye");
 }
 
 void print_obj(Obj* obj) {

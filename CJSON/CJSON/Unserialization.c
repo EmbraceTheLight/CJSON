@@ -143,7 +143,7 @@ char* parse_string(char** json_ptr) {
 		end = find_token(end + 1, '"');
 	}
 
-	size_t len = end - start - num_of_escape_char(start, end) + 1;//×Ö·û´®³¤¶È£¬°üº¬×ªÒå×Ö·û
+	size_t len = end - start - num_of_escape_char(start, end,0) + 1;//×Ö·û´®³¤¶È£¬°üº¬×ªÒå×Ö·û
 	char* ret = (char*)malloc((end - start + 1) * sizeof(char));
 	if (ret == NULL) {
 		printf("[Unserialization::parse_string] Malloc string failed!\n");
@@ -415,7 +415,7 @@ bool create_key_value(Obj* obj) {
 		printf("[Unserialization::create_key_value] Malloc key failed!\n");
 		return false;
 	}
-	gets_s(key, 1024);
+	gets_s(key, INIT_STR_SIZE);
 	obj->kvs[obj->nums].key = key;
 
 	printf("Please set value type:\n");
@@ -441,6 +441,7 @@ bool create_key_value(Obj* obj) {
 			return false;
 		}
 		gets_s(value, 1024);
+		
 		obj->kvs[obj->nums].value.type = STRING;
 		obj->kvs[obj->nums].value.string = value;
 		obj->nums++;
@@ -495,6 +496,12 @@ bool create_key_value(Obj* obj) {
 		char* json_object = get_json(NULL);
 		char* del = json_object;
 		Obj* parse_obj = string2object(&json_object);
+		if (parse_obj == NULL) {
+			printf("[Unserialization::create_key_value] parse object failed!\n");
+			free(del);
+			free(key);
+			return false;
+		}
 		obj->kvs[obj->nums].value.type = OBJECT;
 		obj->kvs[obj->nums].value.object = (struct Obj*)parse_obj;
 		obj->nums++;

@@ -37,6 +37,7 @@ char* object2string(Obj* obj) {
 				else {
 					printf("[print::make_object_string]  Realloc json string failed!\n");
 					free(json);
+					free(line);
 					return NULL;
 				}
 			}
@@ -407,7 +408,11 @@ Obj* create_obj() {
 			printf("exit create object.\n");
 			break;
 		}
-		create_key_value(obj);
+		bool ok = create_key_value(obj);
+		if (!ok) {
+			cleanup(obj, OBJECT);
+			return NULL;
+		}
 		printf("now the object is:");
 		print_obj(obj);
 	}

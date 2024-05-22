@@ -61,6 +61,41 @@ static bool strncmp_ignore_case(const char* str1, const char* str2, size_t cmp_l
 	return true;
 }
 
+// translate_escape 转义字符的转换函数
+static char translate_escape(char c) {
+	switch (c) {
+	case '\"':
+		return '\"';
+	case '\\':
+		return '\\';
+	case '/':
+		return '/';
+	case 'b':
+		return '\b';
+	case 'f':
+		return '\f';
+	case 'n':
+		return '\n';
+	case 'r':
+		return '\r';
+	case 't':
+		return '\t';
+	}
+	return '\0';
+}
+
+// is_escape_legal 判断是否为合法的转义字符,若是，返回转义后字符，否则返回0
+static char is_escape_legal(char c) {
+	char* p = escape;
+	while (*p != '\0') {
+		if (c == *p) {
+			return translate_escape(c);
+		}
+		p++;
+	}
+	return '\0';
+}
+
 char* get_substr(char* start, char* end) {
 	size_t len = end - start + 1;
 	char* res = (char*)malloc(len * sizeof(char));
@@ -78,14 +113,40 @@ char* get_substr(char* start, char* end) {
 	return res;
 }
 
+//static char* make_value(const char* value) {
+//	char* vs = (char*)malloc((strlen(value) + num_of_escape_char(value, value + strlen(value), 1) + 3) * sizeof(char));
+//	char* ret = vs;
+//	if (!vs) {
+//		return NULL;
+//	}
+//	*(vs++) = '"';
+//	while (*value != '\0') {
+//		if (is_escape_legal(*value)) {
+//			*(vs++) = '\\';
+//		}
+//		*(vs++) = *(value++);
+//	}
+//	*(vs++) = '"';
+//	*vs = '\0';
+//	return ret;
+//}
 char* make_value_string(char* key, char* value, bool is_obj_arr) {
-	size_t vs_len = strlen(value) + strlen(key) + 6;//两个字符串的长度加上两对双引号的长度和冒号的长度，以及一个'\0'
+	size_t vs_len = strlen(value) + strlen(key) + num_of_escape_char(value,value+strlen(value),1) + 6;//两个字符串的长度加上两对双引号的长度和冒号的长度，以及一个'\0'
 	char* vs = (char*)calloc(vs_len, sizeof(char));
-	if (vs == NULL) {
+	if (!vs) {
 		printf("[print::make_value_string] make string failed!\n");
 		return NULL;
 	}
-	is_obj_arr == true ? sprintf(vs, "\"%s\":\"%s\"", key, value) : sprintf(vs, "\"%s\"", value);
+
+	/*char* del = make_value(value);
+	if (!del) {
+		printf("[print::make_value_string] make string failed!\n");
+		free(vs);
+		return NULL;
+	}*/
+
+	is_obj_arr == true ? sprintf(vs, "\"%s\":\"%s\"", key,value) : sprintf(vs, "\"%s\"", value);
+	//free(del);
 	return vs;
 }
 
@@ -181,45 +242,21 @@ Type check_arr_or_obj(char* str) {
 	return UNDEFINED;
 }
 
-static char translate_escape(char c) {
-	switch (c) {
-	case '\"':
-		return '\"';
-	case '\\':
-		return '\\';
-	case '/':
-		return '/';
-	case 'b':
-		return '\b';
-	case 'f':
-		return '\f';
-	case 'n':
-		return '\n';
-	case 'r':
-		return '\r';
-	case 't':
-		return '\t';
-	}
-	return '\0';
-}
-
-// is_escape_legal 判断是否为合法的转义字符,若是，返回转义后字符，否则返回0
-static char is_escape_legal(char c) {
-	char* p = escape;
-	while (*p != '\0') {
-		if (c == *p) {
-			return translate_escape(c);
-		}
-		p++;
-	}
-	return '\0';
-}
-
-size_t num_of_escape_char(const char* start,const char* end) {
+size_t num_of_escape_char(const char* start,const char* end, int mode) {
 	size_t ret = 0;
-	for (const char* p = start; p < end; p++) {
-		if (*p == '\\') {
-			ret++;
+	if (mode ==0)
+	{
+		for (const char* p = start; p < end; p++) {
+			if (*p == '\\') {
+				ret++;
+			}
+		}
+	}
+	else if (mode == 1) {
+		for (const char* p = start; p < end; p++) {
+			if (is_escape_legal(*p) != 0) {
+				ret++;
+			}
 		}
 	}
 	return ret;
@@ -255,20 +292,16 @@ static void free_array(Array* arr) {
 		JsonValue val = arr->jvs[i];
 		if (val.type == ARRAY) {
 			free_array(val.array);
-			printf("[helper::free_array] free array success!\n");
 		}
 		else if (val.type == OBJECT) {
 			free_object(val.object);
-			printf("[helper::free_array] free object success!\n");
 		}
 		else if (val.type == STRING) {
 			free(val.string);
-			printf("[helper::free_array] free string success!\n");
 		}
 	}
 	free(arr->jvs);
 	free(arr);
-	printf("[helper::free_array] free array success!\n");
 }
 
 static void free_object(Obj* obj) {
@@ -277,15 +310,12 @@ static void free_object(Obj* obj) {
 		free(kv.key);
 		if (kv.value.type == ARRAY) {
 			free_array(kv.value.array);
-			printf("[helper::free_object] free array success!\n");
 		}
 		else if (kv.value.type == OBJECT) {
 			free_object(kv.value.object);
-			printf("[helper::free_object] free object success!\n");
 		}
 		else if (kv.value.type == STRING) {
 			free(kv.value.string);
-			printf("[helper::free_object] free string success!\n");
 		}
 	}
 	free(obj->kvs);
@@ -303,5 +333,4 @@ void cleanup(void* json, Type type) {
 	else if (type == STRING) {
 		free((char*)json);
 	}
-	puts("[helper::cleanup] free success!");
 }

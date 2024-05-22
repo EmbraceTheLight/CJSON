@@ -31,8 +31,8 @@ char* make_value_bool(char* key, bool value, bool is_obj_arr);
 // make_value_null 将value为null值的键值对转换为json字符串
 char* make_value_null(char* key, bool is_obj_arr);
 
-// num_of_escape_char 计算字符串中转义字符的个数
-size_t num_of_escape_char(const char* str, const char* end);
+// num_of_escape_char 计算字符串中转义字符的个数,mode==0表示计算转义字符个数，mode==1表示计算字符应该转义的个数
+size_t num_of_escape_char(const char* str, const char* end,int mode);
 
 // my_strcpy 字符串复制，并能处理转义字符
 char* my_strcpy(char* dst,const char* start,const char* end);

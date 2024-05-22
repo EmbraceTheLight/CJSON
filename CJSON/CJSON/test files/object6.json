@@ -1,6 +1,6 @@
 {
-	"aaa":"111",
-	"bbb":222,
+	"aaa":"dvbv ",
+	"bbb":61451.531400,
 	"ccc":true,
 	"ddd":false,
 	"eee":null,
@@ -9,5 +9,13 @@
 	"name":"Alice",
 	"age":25
 },
- true, false, null, [ "a", "b", "c" ] ]
+ true, false, null, [ "a", "b", "c" ] ],
+	"ggg":{
+	"name":"John",
+	"address":"123 Main St",
+	"city":"Anytown",
+	"state":"CA",
+	"phone":"555-555-5555",
+		"description": "This is a \"quoted\"string with escape\n characters."
+}
 }
