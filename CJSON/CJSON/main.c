@@ -1,4 +1,4 @@
-#define DEBUG
+//#define DEBUG
 #include"Serialization.h"
 #include"Unserialization.h"
 #include"tests.h"

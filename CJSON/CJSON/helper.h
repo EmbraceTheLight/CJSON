@@ -37,9 +37,6 @@ size_t num_of_escape_char(const char* str, const char* end,int mode);
 // my_strcpy 字符串复制，并能处理转义字符
 char* my_strcpy(char* dst,const char* start,const char* end);
 
-// get_substr 获取子从start至(end-1)的子字符串
-char* get_substr(char* start, char* end);
-
 // cleanup 释放内存
 void cleanup(void*json,Type type);
 

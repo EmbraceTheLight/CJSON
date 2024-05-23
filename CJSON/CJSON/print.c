@@ -114,7 +114,7 @@ void main_menu() {
 	{
 		char* res = handle_input();
 		if (!res) {
-			return;
+			break;
 		}
 		char* del = res;
 		obj = string2object(&res);

@@ -392,8 +392,9 @@ Array* string2array(char** json_ptr) {
 }
 
 bool create_key_value(Obj* obj) {
-	printf("Please input key of key-values,Input an empty line to end the input:\n");
-	char*key = read_string(stdin);
+	printf("Please input key of key-values:\n");
+	char key[INIT_STR_SIZE];
+	gets_s(key, INIT_STR_SIZE);
 	if (key == NULL) {
 		printf("[Unserialization::create_key_value] Malloc key failed!\n");
 		return false;

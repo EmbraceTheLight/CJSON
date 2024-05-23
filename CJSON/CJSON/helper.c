@@ -94,23 +94,6 @@ static char is_escape_legal(char c) {
 	return '\0';
 }
 
-char* get_substr(char* start, char* end) {
-	size_t len = end - start + 1;
-	char* res = (char*)malloc(len * sizeof(char));
-	if (!res) {
-		fprintf(stderr, "[helper::get_substr] Malloc tmp failed!\n");
-		return NULL;
-	}
-	char* t = my_strcpy(res, start, end);
-	if (!t) {
-		printf("[helper::get_substr] Copy string failed!\n");
-		free(res);
-		return NULL;
-	}
-	res[end - start] = '\0';
-	return res;
-}
-
 char* make_value_string(char* key, char* value, bool is_obj_arr) {
 	size_t vs_len = strlen(value) + strlen(key) + num_of_escape_char(value,value+strlen(value),1) + 6;//两个字符串的长度加上两对双引号的长度和冒号的长度，以及一个'\0'
 	char* vs = (char*)calloc(vs_len, sizeof(char));
