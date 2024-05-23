@@ -88,6 +88,7 @@ static void ask_if_modify_JsonObj(Obj* obj) {
 		
 	}
 }
+
 void main_menu() {
 	printf("welcome to use this json tool.\n");
 	printf("enter your select:\n");
@@ -112,6 +113,9 @@ void main_menu() {
 	case 2:
 	{
 		char* res = handle_input();
+		if (!res) {
+			return;
+		}
 		char* del = res;
 		obj = string2object(&res);
 		if (!obj) {

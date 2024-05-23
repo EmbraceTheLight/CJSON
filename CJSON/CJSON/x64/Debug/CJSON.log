@@ -1,11 +1,10 @@
 ﻿  Unserialization.c
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(527,12): warning C4133: “=”: 从“Obj *”到“Obj *”的类型不兼容
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(657,23): warning C4018: “<”: 有符号/无符号不匹配
   helper.c
+D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(528,12): warning C4133: “=”: 从“Obj *”到“Obj *”的类型不兼容
+D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(658,23): warning C4018: “<”: 有符号/无符号不匹配
 D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\helper.c(87,8): warning C4090: “初始化”: 不同的“const”限定符
 D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\helper.c(269,19): warning C4133: “函数”: 从“Obj *”到“Obj *”的类型不兼容
 D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\helper.c(287,24): warning C4133: “函数”: 从“Obj *”到“Obj *”的类型不兼容
-D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\helper.c(325,14): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
-  main.c
+D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\helper.c(323,14): warning C4244: “*=”: 从“double”转换到“size_t”，可能丢失数据
   正在生成代码...
   CJSON.vcxproj -> D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\x64\Debug\CJSON.exe

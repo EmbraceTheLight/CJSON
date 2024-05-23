@@ -1,7 +1,5 @@
 #include"Unserialization.h"
 static char* get_json(char* file_path) {
-	puts("Please input json string:");
-
 	FILE* stream = stdin;
 	if (file_path != NULL) {
 		stream = fopen(file_path, "r");
@@ -11,6 +9,9 @@ static char* get_json(char* file_path) {
 		}
 	}
 	char* json = read_string(stream);
+	if (stream != stdin) {
+		fclose(stream);
+	}
 	return json;
 }
 
@@ -35,6 +36,7 @@ char* handle_input(void) {
 			json = get_json(file_path);
 		}
 		else {
+			printf("Please input json string,Input an empty line to end the input:\n");
 			json = get_json(NULL);
 		}
 	}
@@ -116,13 +118,13 @@ char* parse_string(char** json_ptr) {
 	}
 
 	char* ret = (char*)calloc((end - start + 1), sizeof(char));
-	if (ret == NULL) {
+	if (!ret) {
 		printf("[Unserialization::parse_string] Malloc string failed!\n");
 		return NULL;
 	}
 
 	char* tmp = my_strcpy(ret, start, end);
-	if (tmp == NULL) {
+	if (!tmp) {
 		printf("[Unserialization::parse_string] Copy string failed!\n");
 		free(ret);
 		return NULL;
@@ -390,13 +392,12 @@ Array* string2array(char** json_ptr) {
 }
 
 bool create_key_value(Obj* obj) {
-	printf("Please input key of key-values:\n");
-	char* key = (char*)malloc(INIT_STR_SIZE * sizeof(char));
+	printf("Please input key of key-values,Input an empty line to end the input:\n");
+	char*key = read_string(stdin);
 	if (key == NULL) {
 		printf("[Unserialization::create_key_value] Malloc key failed!\n");
 		return false;
 	}
-	gets_s(key, INIT_STR_SIZE);
 	int i;
 	Obj*find=find_by_key(obj, key, &i);
 	if (find) {

@@ -68,8 +68,8 @@ void test_json_find(void) {
 		char key[INIT_STR_SIZE];
 		printf("input key: ");
 		gets_s(key, INIT_STR_SIZE);
-		int i;
-		Obj* o = find_by_key(obj, key,&i);
+		int idx;
+		Obj* o = find_by_key(obj, key,&idx);
 		if (!o) {
 			printf("key not found.\n");
 			continue;

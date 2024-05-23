@@ -314,8 +314,6 @@ char* read_string(FILE* stream) {
 	char* json = (char*)calloc(INIT_STR_SIZE, sizeof(char));
 	if (json == NULL) {
 		printf("[Unserialization::get_json] INIT json string failed!\n");
-		if (stream!=stdin)
-			fclose(stream);
 		return NULL;
 	}
 	while (fgets(temp, BUFFER_SIZE, stream) != NULL && temp[0] != '\n') {
@@ -331,8 +329,6 @@ char* read_string(FILE* stream) {
 			else {
 				printf("[Unserialization::get_json] Realloc json string failed!\n");
 				free(json);
-				if (stream != stdin)
-					fclose(stream);
 				return NULL;
 			}
 		}

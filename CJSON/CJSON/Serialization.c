@@ -398,6 +398,10 @@ char* array2string(Array* arr) {
 Obj* create_obj() {
 	printf("create json object:\n");
 	Obj* obj = init_obj();
+	if (!obj) {
+		printf("[Serialization::create_obj] init json object failed!\n");
+		return NULL;
+	}
 	printf("now the object is:");
 	print_obj(obj);
 	while (1) {

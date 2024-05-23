@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Serialization.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Serialization.h" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Unserialization.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/Unserialization.h" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/define.h" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/helper.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/helper.h" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/print.h" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/tests.h" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/utilities.c" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/utilities.h" charset="GBK" />
+  </component>
+</project>
