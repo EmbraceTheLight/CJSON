@@ -293,30 +293,37 @@ void cleanup(void* json, Type type) {
 char* read_string(FILE* stream) {
 	size_t jsize = INIT_STR_SIZE;
 	size_t jlen = 0;
-	char temp[BUFFER_SIZE];
+	char ch = 0;
+	//char temp[BUFFER_SIZE];
 	char* json = (char*)calloc(INIT_STR_SIZE, sizeof(char));
 	if (json == NULL) {
 		printf("[Unserialization::get_json] INIT json string failed!\n");
 		return NULL;
 	}
-	while (fgets(temp, BUFFER_SIZE, stream) != NULL && temp[0] != '\n') {
-		size_t line_length = strlen(temp);
-		if (jlen + line_length >= jsize) {
-			while (jlen + line_length >= jsize) { //¶Ô×Ö·û´®½øÐÐÀ©ÈÝ
-				jsize *= 1.25;
-			}
-			char* t = (char*)realloc(json, jsize);
-			if (t) {
-				json = t;
-			}
-			else {
-				printf("[Unserialization::get_json] Realloc json string failed!\n");
-				free(json);
-				return NULL;
-			}
-		}
-		strcpy(json+jlen, temp);
-		jlen += line_length;
+	while ((ch=getc(stream)) != EOF) {
+		json[jlen++] = ch;
+		if (jlen >= jsize)  //¶Ô×Ö·û´®½øÐÐÀ©ÈÝ
+			jsize *= 1.25;
 	}
+	//while (fgets(temp, BUFFER_SIZE, stream) != NULL && temp[0] != '\n') {
+	//	size_t line_length = strlen(temp);
+	//	if (jlen + line_length >= jsize) {
+	//		while (jlen + line_length >= jsize) { //¶Ô×Ö·û´®½øÐÐÀ©ÈÝ
+	//			jsize *= 1.25;
+	//		}
+	//		char* t = (char*)realloc(json, jsize);
+	//		if (t) {
+	//			json = t;
+	//		}
+	//		else {
+	//			printf("[Unserialization::get_json] Realloc json string failed!\n");
+	//			free(json);
+	//			return NULL;
+	//		}
+	//	}
+	//	strcpy(json+jlen, temp);
+	//	jlen += line_length;
+	//}
+	json[jlen] = '\0';
 	return json;
 }

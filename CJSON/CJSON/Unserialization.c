@@ -36,7 +36,7 @@ char* handle_input(void) {
 			json = get_json(file_path);
 		}
 		else {
-			printf("Please input json string,Input an empty line to end the input:\n");
+			printf("Please input json string,Input Ctrl+Z to end:\n");
 			json = get_json(NULL);
 		}
 	}
