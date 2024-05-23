@@ -341,7 +341,7 @@ char* array2string(Array* arr) {
 					json = t;
 				}
 				else {
-					printf("[print::make_array_string]  Realloc json string failed!\n");
+					printf("[print::make_array_string] Realloc json string failed!\n");
 					free(json);
 					return NULL;
 				}
@@ -416,7 +416,7 @@ Obj* create_obj() {
 		printf("now the object is:");
 		print_obj(obj);
 	}
-	printf("[Serialization::create_obj] creat json object success.\n");
+	printf("[Serialization::create_obj] create json object success.\n");
 	return obj;
 }
 

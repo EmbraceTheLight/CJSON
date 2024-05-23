@@ -1,44 +1,16 @@
 #include"Unserialization.h"
 static char* get_json(char* file_path) {
 	puts("Please input json string:");
-	char temp[BUFFER_SIZE];
-	char* json = (char*)calloc(INIT_STR_SIZE, sizeof(char));
-	if (json == NULL) {
-		printf("[Unserialization::get_json] INIT json string failed!\n");
-		return NULL;
-	}
-
-	size_t jsize = INIT_STR_SIZE;
-	size_t jlen = 0;
 
 	FILE* stream = stdin;
 	if (file_path != NULL) {
 		stream = fopen(file_path, "r");
-		if (stream == NULL) {
+		if (!stream) {
 			perror("File opening failed");
-			free(json);
 			return NULL;
 		}
 	}
-	while (fgets(temp, BUFFER_SIZE, stream) != NULL && temp[0] != '\n') {
-		size_t line_length = strlen(temp);
-		if (jlen + line_length >= jsize) {
-			while (jlen + line_length >= jsize) { //对字符串进行扩容
-				jsize *= 1.25;
-			}
-			char* t = (char*)realloc(json, jsize);
-			if (t != NULL) {
-				json = t;
-			}
-			else {
-				printf("[Unserialization::get_json] Realloc json string failed!\n");
-				free(json);
-				return NULL;
-			}
-		}
-		strcat(json, temp);
-		jlen += line_length;
-	}
+	char* json = read_string(stream);
 	return json;
 }
 
@@ -58,8 +30,8 @@ char* handle_input(void) {
 	else {
 		if (select == 1) {
 			printf("Input file path:\n");
-			char file_path[BUFFER_SIZE];
-			gets_s(file_path, BUFFER_SIZE);
+			char file_path[INIT_STR_SIZE];
+			gets_s(file_path, INIT_STR_SIZE);
 			json = get_json(file_path);
 		}
 		else {
@@ -143,8 +115,7 @@ char* parse_string(char** json_ptr) {
 		end = find_token(end + 1, '"');
 	}
 
-	size_t len = end - start - num_of_escape_char(start, end,0) + 1;//字符串长度，包含转义字符
-	char* ret = (char*)malloc((end - start + 1) * sizeof(char));
+	char* ret = (char*)calloc((end - start + 1), sizeof(char));
 	if (ret == NULL) {
 		printf("[Unserialization::parse_string] Malloc string failed!\n");
 		return NULL;
@@ -163,13 +134,16 @@ char* parse_string(char** json_ptr) {
 
 Obj* string2object(char** json_ptr) {
 	bool is_key = true;
-	Obj* newObj = init_obj();
 
 	char* mov = *json_ptr;
+	mov = eat_space(mov);//到达第一个键值对的第一个字符
+	if (*mov != '{') {
+		printf("[Unserialization::string2object] Invalid json format!\n");
+		return NULL;
+	}
+	mov = eat_space(mov + 1);//到达第一个键值对的第一个字符
 
-	mov = eat_space(mov);
-	mov = eat_space(mov+1);//到达第一个键值对的第一个字符
-
+	Obj* newObj = init_obj();
 	while (*mov != '}' && *mov != '\0') {
 		switch (*mov) {
 		case '"':
@@ -304,6 +278,10 @@ Array* string2array(char** json_ptr) {
 
 	char* mov = *json_ptr;
 	mov = eat_space(mov);
+	if (*mov != '[') {
+		printf("[Unserialization::string2array] Invalid json format!\n");
+		return NULL;
+	}
 	mov = eat_space(mov + 1);//到达第一个元素的第一个字符
 
 	while (*mov != ']' && *mov != '\0') {
@@ -419,6 +397,14 @@ bool create_key_value(Obj* obj) {
 		return false;
 	}
 	gets_s(key, INIT_STR_SIZE);
+	int i;
+	Obj*find=find_by_key(obj, key, &i);
+	if (find) {
+		printf("The key already exists, please input another key:\n");
+		free(key);
+		return false;
+	}
+
 	obj->kvs[obj->nums].key = key;
 
 	printf("Please set value type:\n");
@@ -432,7 +418,6 @@ bool create_key_value(Obj* obj) {
 		scanf("%d", &select);
 		while (getchar() != '\n');
 	}
-	
 	switch (select) {
 	case STRING: //string
 	{
@@ -444,7 +429,7 @@ bool create_key_value(Obj* obj) {
 			return false;
 		}
 		gets_s(value, 1024);
-		
+
 		obj->kvs[obj->nums].value.type = STRING;
 		obj->kvs[obj->nums].value.string = value;
 		obj->nums++;
@@ -526,7 +511,7 @@ bool create_key_value(Obj* obj) {
 	return true;
 }
 
-Obj* find_by_key(Obj* obj, char* key,int* index) {
+Obj* find_by_key(Obj* obj, char* key, int* index) {
 	char* cur = strtok(key, ".");
 	Obj* curObj = obj;
 	Obj* ret = NULL;
@@ -536,7 +521,7 @@ Obj* find_by_key(Obj* obj, char* key,int* index) {
 		bool is_find = false;  //表明当前对象是否有找到key
 		unsigned int i = 0;
 		//遍历当前对象
-		for (i=0; i < curObj->nums; i++) {
+		for (i = 0; i < curObj->nums; i++) {
 			if (strcmp(curObj->kvs[i].key, cur) == 0) {
 				ret = curObj;
 				curObj = curObj->kvs[i].value.object;
@@ -549,7 +534,7 @@ Obj* find_by_key(Obj* obj, char* key,int* index) {
 			return NULL;
 		}
 		cur = strtok(NULL, ".");
-		
+
 	}
 	return ret;
 }
@@ -570,7 +555,7 @@ static void help_cleaner(JsonValue jv) {
 }
 bool update_value(Obj* obj, char* key) {
 	int i;
-	Obj* object = find_by_key(obj, key,&i);
+	Obj* object = find_by_key(obj, key, &i);
 	if (!object) {
 		fprintf(stderr, "No such key:%s\n", key);
 		return false;
@@ -661,7 +646,7 @@ bool update_value(Obj* obj, char* key) {
 
 bool del_by_key(Obj* obj, char* key) {
 	int idx;
-	Obj* object = find_by_key(obj, key,&idx);
+	Obj* object = find_by_key(obj, key, &idx);
 	if (!object) {
 		printf("No such key:%s\n", key);
 		return false;

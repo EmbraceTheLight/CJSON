@@ -14,10 +14,9 @@ Obj* init_obj() {
 	ret->nums = 0;
 	ret->size = INIT_OBJ_NUMS;
 	ret->kvs = (KeyValue*)malloc(INIT_OBJ_NUMS * sizeof(KeyValue));
-	if (ret->kvs == NULL) {
+	if (!ret->kvs) {
 		printf("[Unserialization::init_obj] Init KeyValue failed!\n");
-		free(ret->kvs);
-		ret->kvs = NULL;
+		free(ret);
 		return NULL;
 	}
 	return ret;
@@ -32,10 +31,9 @@ Array* init_array() {
 	ret->nums = 0;
 	ret->size = INIT_ARRAY_NUMS;
 	ret->jvs = (JsonValue*)malloc(INIT_ARRAY_NUMS * sizeof(JsonValue));
-	if (ret->jvs == NULL) {
+	if (!ret->jvs) {
 		printf("[Unserialization::init_array] Init KeyValue failed!\n");
-		free(ret->jvs);
-		ret->jvs = NULL;
+		free(ret);
 		return NULL;
 	}
 	return ret;
@@ -113,23 +111,6 @@ char* get_substr(char* start, char* end) {
 	return res;
 }
 
-//static char* make_value(const char* value) {
-//	char* vs = (char*)malloc((strlen(value) + num_of_escape_char(value, value + strlen(value), 1) + 3) * sizeof(char));
-//	char* ret = vs;
-//	if (!vs) {
-//		return NULL;
-//	}
-//	*(vs++) = '"';
-//	while (*value != '\0') {
-//		if (is_escape_legal(*value)) {
-//			*(vs++) = '\\';
-//		}
-//		*(vs++) = *(value++);
-//	}
-//	*(vs++) = '"';
-//	*vs = '\0';
-//	return ret;
-//}
 char* make_value_string(char* key, char* value, bool is_obj_arr) {
 	size_t vs_len = strlen(value) + strlen(key) + num_of_escape_char(value,value+strlen(value),1) + 6;//两个字符串的长度加上两对双引号的长度和冒号的长度，以及一个'\0'
 	char* vs = (char*)calloc(vs_len, sizeof(char));
@@ -137,16 +118,7 @@ char* make_value_string(char* key, char* value, bool is_obj_arr) {
 		printf("[print::make_value_string] make string failed!\n");
 		return NULL;
 	}
-
-	/*char* del = make_value(value);
-	if (!del) {
-		printf("[print::make_value_string] make string failed!\n");
-		free(vs);
-		return NULL;
-	}*/
-
 	is_obj_arr == true ? sprintf(vs, "\"%s\":\"%s\"", key,value) : sprintf(vs, "\"%s\"", value);
-	//free(del);
 	return vs;
 }
 
@@ -333,4 +305,39 @@ void cleanup(void* json, Type type) {
 	else if (type == STRING) {
 		free((char*)json);
 	}
+}
+
+char* read_string(FILE* stream) {
+	size_t jsize = INIT_STR_SIZE;
+	size_t jlen = 0;
+	char temp[BUFFER_SIZE];
+	char* json = (char*)calloc(INIT_STR_SIZE, sizeof(char));
+	if (json == NULL) {
+		printf("[Unserialization::get_json] INIT json string failed!\n");
+		if (stream!=stdin)
+			fclose(stream);
+		return NULL;
+	}
+	while (fgets(temp, BUFFER_SIZE, stream) != NULL && temp[0] != '\n') {
+		size_t line_length = strlen(temp);
+		if (jlen + line_length >= jsize) {
+			while (jlen + line_length >= jsize) { //对字符串进行扩容
+				jsize *= 1.25;
+			}
+			char* t = (char*)realloc(json, jsize);
+			if (t) {
+				json = t;
+			}
+			else {
+				printf("[Unserialization::get_json] Realloc json string failed!\n");
+				free(json);
+				if (stream != stdin)
+					fclose(stream);
+				return NULL;
+			}
+		}
+		strcpy(json+jlen, temp);
+		jlen += line_length;
+	}
+	return json;
 }

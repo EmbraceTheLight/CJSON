@@ -1,3 +1,4 @@
+#define DEBUG
 #include"Serialization.h"
 #include"Unserialization.h"
 #include"tests.h"
@@ -12,7 +13,6 @@ int main(void) {
 	//test_json_addKV();
 	//test_json_updateKV();
 	//test_json_deleteKV();
-
 	main_menu();
 	return 0;
 }

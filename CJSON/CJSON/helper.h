@@ -42,3 +42,6 @@ char* get_substr(char* start, char* end);
 
 // cleanup 释放内存
 void cleanup(void*json,Type type);
+
+// read_string 读取字符串,返回字符串的起始位置
+char* read_string(FILE *stream);
