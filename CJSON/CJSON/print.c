@@ -2,6 +2,88 @@
 #include "helper.h"
 #include "Serialization.h"
 
+char* handle_json_string(char* json_str) {
+	char* cur = json_str;
+	char* ret = (char*)calloc(INIT_STR_SIZE,sizeof(char));
+	if (!ret) {
+		free(json_str);
+		return NULL;
+	}
+	bool flag = false;
+	size_t len = 0;
+	size_t size = INIT_STR_SIZE;
+	while (*cur != '\0') {
+		if (!flag && (*cur == '\t' || *cur == '\n')) {
+			cur++;
+			continue;
+		}
+		if (len + 2 >= size) {
+			char* t = (char*)realloc(ret, size * 2);
+			if (!t) {
+				perror("realloc failed:");
+				free(ret);
+				free(json_str);
+				return NULL;
+			}
+			ret = t;
+			size *= 2;
+		}
+		switch (*cur)
+		{
+		case '\"':
+			if (!flag) {
+				ret[len++]=*cur;
+				flag = true;
+			}
+			else {
+				if(*(cur+1)==','||*(cur+1)==':'||*(cur + 1) == '\n'){ //Óöµ½×Ö·û´®ÖÕÖ¹±ê¼Ç
+					ret[len++] = *cur;
+					flag = false;
+				}
+				else {
+					ret[len++]='\\';
+					ret[len++]=*cur;
+				}
+			}
+			break;
+		case '\\':
+			ret[len++] = '\\';
+			ret[len++] = '\\';
+			break;
+		case '\/':
+			ret[len++] = '\\';
+			ret[len++] = '/';
+			break;
+		case '\b':
+			ret[len++] = '\\';
+			ret[len++] = 'b';
+			break;
+		case '\f':
+			ret[len++] = '\\';
+			ret[len++] = 'f';
+			break;
+		case '\n':
+			ret[len++] = '\\';
+			ret[len++] = 'n';
+			break;
+		case '\r':
+			ret[len++] = '\\';
+			ret[len++] = 'r';
+			break;
+		case '\t':
+			ret[len++] = '\\';
+			ret[len++] = 't';
+			break;
+		default:
+			ret[len++] = *cur;
+			break;
+		}
+		cur++;
+	}
+	ret[len] = '\0';
+	free(json_str);
+	return ret;
+}
 static void ask_if_save_file(Obj* obj) {
 	printf("Do you want to save this json?[y/n]");
 	char c = getchar();
@@ -12,15 +94,16 @@ static void ask_if_save_file(Obj* obj) {
 		char path[INIT_STR_SIZE];
 		gets_s(path, INIT_STR_SIZE);
 		char* json_str = object2string(obj);
+		char* final_str=handle_json_string(json_str);
 		FILE* fp = fopen(path, "w");
 		if (!fp) {
 			perror("create file failed:");
-			free(json_str);
+			free(final_str);
 			return;
 		}
-		fputs(json_str, fp);
+		fputs(final_str, fp);
 		fclose(fp);
-		free(json_str);
+		free(final_str);
 		printf("json object saved to %s success\n", path);
 	}
 }
@@ -85,7 +168,7 @@ static void ask_if_modify_JsonObj(Obj* obj) {
 			}
 
 		}
-		
+
 	}
 }
 

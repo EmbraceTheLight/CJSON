@@ -1,4 +1,4 @@
 ﻿  Unserialization.c
-D:\Study\自学\CJSON\CJSON\CJSON\Unserialization.c(529,12): warning C4133: “=”: 从“Obj *”到“Obj *”的类型不兼容
-D:\Study\自学\CJSON\CJSON\CJSON\Unserialization.c(659,23): warning C4018: “<”: 有符号/无符号不匹配
-  CJSON.vcxproj -> D:\Study\自学\CJSON\CJSON\x64\Debug\CJSON.exe
+D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(554,12): warning C4133: “=”: 从“Obj *”到“Obj *”的类型不兼容
+D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\CJSON\Unserialization.c(684,23): warning C4018: “<”: 有符号/无符号不匹配
+  CJSON.vcxproj -> D:\Microsoft Visual studio\2022\WorkSpace\CJSON\CJSON\x64\Debug\CJSON.exe

@@ -82,8 +82,7 @@ static char translate_escape(char c) {
 	return '\0';
 }
 
-// is_escape_legal 判断是否为合法的转义字符,若是，返回转义后字符，否则返回0
-static char is_escape_legal(char c) {
+char is_escape_legal(char c) {
 	char* p = escape;
 	while (*p != '\0') {
 		if (c == *p) {

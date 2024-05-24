@@ -1,4 +1,5 @@
 #include"Unserialization.h"
+#include"print.h"
 static char* get_json(char* file_path) {
 	FILE* stream = stdin;
 	if (file_path != NULL) {
@@ -125,7 +126,7 @@ char* parse_string(char** json_ptr) {
 
 	char* tmp = my_strcpy(ret, start, end);
 	if (!tmp) {
-		printf("[Unserialization::parse_string] Copy string failed!\n");
+		printf("[Unserialization::parse_string] Parse string failed!\n");
 		free(ret);
 		return NULL;
 	}
@@ -393,12 +394,18 @@ Array* string2array(char** json_ptr) {
 
 bool create_key_value(Obj* obj) {
 	printf("Please input key of key-values:\n");
-	char key[INIT_STR_SIZE];
-	gets_s(key, INIT_STR_SIZE);
-	if (key == NULL) {
+	char* key = (char*)malloc(INIT_STR_SIZE * sizeof(char));
+	if (!key) {
 		printf("[Unserialization::create_key_value] Malloc key failed!\n");
 		return false;
 	}
+	char* delk = key;
+	key[0] = '"';
+	gets_s(key+1, INIT_STR_SIZE-2);
+	size_t l = strlen(key);
+	key[l++] = '"';
+	key[l] = '\0';
+
 	int i;
 	Obj*find=find_by_key(obj, key, &i);
 	if (find) {
@@ -407,35 +414,56 @@ bool create_key_value(Obj* obj) {
 		return false;
 	}
 
-	obj->kvs[obj->nums].key = key;
+	char*nk=parse_string(&key);
+	if (nk == NULL) {
+		printf("[Unserialization::create_key_value] parse string failed!\n");
+		free(delk);
+		return false;
+	}
+	obj->kvs[obj->nums].key = nk;
+	free(delk);
+
 
 	printf("Please set value type:\n");
 	printf("1 is string\n2 is number\n3 is true\n4 is false\n5 is null\n6 is array\n7 is object\n0 is quit\n");
 	int select;
 	scanf("%d", &select);
 	while (getchar() != '\n');
-
 	while (select < 0 || select > 7) {
 		printf("Your choice is invalid.Please input number again:\n");
 		scanf("%d", &select);
 		while (getchar() != '\n');
 	}
+
 	switch (select) {
 	case STRING: //string
 	{
 		printf("Please input string value:\n");
+
 		char* value = (char*)malloc(INIT_STR_SIZE * sizeof(char));
-		if (value == NULL) {
-			printf("[Unserialization::create_key_value] Malloc value failed!\n");
+		if (!value) {
+			printf("[Unserialization::create_key_value] Malloc key failed!\n");
 			free(key);
 			return false;
 		}
-		gets_s(value, 1024);
+		char* delv = value;
+		value[0] = '"';
+		gets_s(value + 1, INIT_STR_SIZE - 2);
+		size_t l = strlen(value);
+		value[l++] = '"';
+		value[l] = '\0';
 
+		char*nv = parse_string(&value);
+		if (!nv) {
+			printf("[Unserialization::create_key_value] parse string failed!\n");
+			free(delv);
+			return false;
+		}
 		obj->kvs[obj->nums].value.type = STRING;
-		obj->kvs[obj->nums].value.string = value;
+		obj->kvs[obj->nums].value.string = nv;
 		obj->nums++;
 		obj = check_ObjKvsSize(obj);
+		free(delv);
 		break;
 	}
 	case NUMBER: //number
@@ -477,7 +505,6 @@ bool create_key_value(Obj* obj) {
 		if (parse_arr == NULL) {
 			printf("[Unserialization::create_key_value] parse array failed!\n");
 			free(del);
-			free(key);
 			return false;
 		}
 		obj->kvs[obj->nums].value.type = ARRAY;
@@ -495,7 +522,6 @@ bool create_key_value(Obj* obj) {
 		if (parse_obj == NULL) {
 			printf("[Unserialization::create_key_value] parse object failed!\n");
 			free(del);
-			free(key);
 			return false;
 		}
 		obj->kvs[obj->nums].value.type = OBJECT;
@@ -506,7 +532,6 @@ bool create_key_value(Obj* obj) {
 		break;
 	}
 	case 0:
-		free(key);
 		return false;
 	}
 	printf("create key-value success\n");

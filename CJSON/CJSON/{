@@ -1,0 +1,1 @@
+{"strin\n\\ng":"Hello, JSON!","numb\ter":42,"boolean":true,"null_value":null,"array":[ 1, 2, 3, "four", false, null ],"object":{"nested_string":"Welcome to JSON","nested_number":123}}

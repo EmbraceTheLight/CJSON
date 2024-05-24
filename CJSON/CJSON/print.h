@@ -3,6 +3,8 @@
 
 void main_menu();
 
+char* handle_json_string(char* json_str);
+
 //¥Ú”°JSON Object
 void print_obj(Obj* obj);
 

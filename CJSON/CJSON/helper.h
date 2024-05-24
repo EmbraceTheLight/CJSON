@@ -42,3 +42,6 @@ void cleanup(void*json,Type type);
 
 // read_string 读取字符串,返回字符串的起始位置
 char* read_string(FILE *stream);
+
+// is_escape_legal 判断是否为合法的转义字符,若是，返回转义后字符，否则返回0
+char is_escape_legal(char c);
