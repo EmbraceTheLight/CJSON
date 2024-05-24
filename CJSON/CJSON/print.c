@@ -223,7 +223,7 @@ void main_menu() {
 
 void print_obj(Obj* obj) {
 	char* json_str = object2string(obj);
-	if (json_str != NULL) {
+	if (json_str) {
 		printf("%s\n", json_str);
 	}
 	else {
@@ -234,7 +234,7 @@ void print_obj(Obj* obj) {
 
 void print_arr(Array* arr) {
 	char* json_str = array2string(arr);
-	if (json_str != NULL) {
+	if (json_str) {
 		printf("%s\n", json_str);
 	}
 	else {

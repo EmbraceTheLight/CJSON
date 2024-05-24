@@ -2,7 +2,7 @@
 #include"print.h"
 void test_handle_input(void) {
 	char* res = handle_input();
-	if (res != NULL) {
+	if (res) {
 		while (*res != '\0') {
 			putchar(*(res++));
 		}
@@ -16,7 +16,7 @@ void test_parse_string(void) {
 	char* str = "\"52255\",\nevgvss";
 	printf("original: %s\n", str);
 	char* res = parse_string(&str);
-	if (res != NULL) {
+	if (res) {
 		printf("res: %s\n", res);
 		printf("str: %s\n", str);
 	}
@@ -30,7 +30,7 @@ void test_parse_json_string(void) {
 	Type t = check_arr_or_obj(res);
 	if (t == OBJECT) {
 		Obj* obj = string2object(&res);
-		if (obj != NULL) {
+		if (obj) {
 			print_obj(obj);
 		}
 		else {
@@ -39,7 +39,7 @@ void test_parse_json_string(void) {
 	}
 	else if (t == ARRAY) {
 		Array* arr = string2array(&res);
-		if (arr != NULL) {
+		if (arr) {
 			print_arr(arr);
 		}
 		else {
@@ -53,7 +53,7 @@ void test_parse_json_string(void) {
 
 void test_json_find(void) {
 	char*ret = handle_input();
-	if (ret == NULL) {
+	if (!ret) {
 		fprintf(stderr,"input failed.\n");
 		return;
 	}
@@ -81,7 +81,7 @@ void test_json_find(void) {
 
 void test_json_addKV(void) {
 	char* ret = handle_input();
-	if (ret == NULL) {
+	if (!ret) {
 		fprintf(stderr, "input failed.\n");
 		return;
 	}
@@ -105,7 +105,7 @@ void test_json_addKV(void) {
 
 void test_json_deleteKV(void) {
 	char* ret = handle_input();
-	if (ret == NULL) {
+	if (!ret) {
 		fprintf(stderr, "input failed.\n");
 		return;
 	}
@@ -132,7 +132,7 @@ void test_json_deleteKV(void) {
 
 void test_json_updateKV(void) {
 	char* ret = handle_input();
-	if (ret == NULL) {
+	if (!ret) {
 		fprintf(stderr, "input failed.\n");
 		return;
 	}

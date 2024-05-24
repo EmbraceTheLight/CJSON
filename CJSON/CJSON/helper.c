@@ -7,7 +7,7 @@ const char* escape = "\"\\/bfnrt";
 
 Obj* init_obj() {
 	Obj* ret = (Obj*)malloc(1 * sizeof(Obj));
-	if (ret == NULL) {
+	if (!ret) {
 		printf("[Unserialization::init_obj] Init Obj failed!\n");
 		return NULL;
 	}
@@ -24,7 +24,7 @@ Obj* init_obj() {
 
 Array* init_array() {
 	Array* ret = (Array*)malloc(1 * sizeof(Array));
-	if (ret == NULL) {
+	if (!ret) {
 		printf("[Unserialization::init_array] Init Array failed!\n");
 		return NULL;
 	}
@@ -41,7 +41,7 @@ Array* init_array() {
 
 char* find_token(char* str, char token) {
 	char* ret = strchr(str, token);
-	if (ret == NULL) {
+	if (!ret) {
 		return NULL;
 	}
 	return ret;
@@ -106,7 +106,7 @@ char* make_value_string(char* key, char* value, bool is_obj_arr) {
 
 char* make_value_number(char* key, double value, bool is_obj_arr) {
 	char* vs = (char*)malloc((strlen(key) + 64) * sizeof(char));
-	if (vs == NULL) {
+	if (!vs) {
 		printf("[print::make_value_number] make string failed!\n");
 		return NULL;
 	}
@@ -127,7 +127,7 @@ char* make_value_bool(char* key, bool value, bool is_obj_arr) {
 		vs_len = is_obj_arr == true ? strlen(key) + 9 : 6;
 
 	char* vs = (char*)calloc(vs_len, sizeof(char));
-	if (vs == NULL) {
+	if (!vs) {
 		printf("[print::make_value_bool] make string failed!\n");
 		return NULL;
 	}
@@ -138,7 +138,7 @@ char* make_value_bool(char* key, bool value, bool is_obj_arr) {
 char* make_value_null(char* key, bool is_obj_arr) {
 	size_t vs_len = is_obj_arr == true ? strlen(key) + 8 : 5;
 	char* vs = (char*)calloc(vs_len, sizeof(char));
-	if (vs == NULL) {
+	if (!vs) {
 		printf("[print::make_value_null] make string failed!\n");
 		return NULL;
 	}
@@ -295,7 +295,7 @@ char* read_string(FILE* stream) {
 	char ch = 0;
 	//char temp[BUFFER_SIZE];
 	char* json = (char*)calloc(INIT_STR_SIZE, sizeof(char));
-	if (json == NULL) {
+	if (!json) {
 		printf("[Unserialization::get_json] INIT json string failed!\n");
 		return NULL;
 	}
@@ -304,25 +304,6 @@ char* read_string(FILE* stream) {
 		if (jlen >= jsize)  //¶Ô×Ö·û´®½øÐÐÀ©ÈÝ
 			jsize *= 1.25;
 	}
-	//while (fgets(temp, BUFFER_SIZE, stream) != NULL && temp[0] != '\n') {
-	//	size_t line_length = strlen(temp);
-	//	if (jlen + line_length >= jsize) {
-	//		while (jlen + line_length >= jsize) { //¶Ô×Ö·û´®½øÐÐÀ©ÈÝ
-	//			jsize *= 1.25;
-	//		}
-	//		char* t = (char*)realloc(json, jsize);
-	//		if (t) {
-	//			json = t;
-	//		}
-	//		else {
-	//			printf("[Unserialization::get_json] Realloc json string failed!\n");
-	//			free(json);
-	//			return NULL;
-	//		}
-	//	}
-	//	strcpy(json+jlen, temp);
-	//	jlen += line_length;
-	//}
 	json[jlen] = '\0';
 	return json;
 }

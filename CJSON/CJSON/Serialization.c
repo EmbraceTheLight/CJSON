@@ -3,7 +3,7 @@
 
 char* object2string(Obj* obj) {
 	char* json = (char*)calloc(INIT_STR_SIZE, sizeof(char));
-	if (json == NULL) {
+	if (!json) {
 		printf("[print::make_object_string] object to json string failed!\n");
 		return NULL;
 	}
@@ -31,7 +31,7 @@ char* object2string(Obj* obj) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -65,7 +65,7 @@ char* object2string(Obj* obj) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -95,7 +95,7 @@ char* object2string(Obj* obj) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -123,7 +123,7 @@ char* object2string(Obj* obj) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -157,7 +157,7 @@ char* object2string(Obj* obj) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -191,7 +191,7 @@ char* object2string(Obj* obj) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -222,7 +222,7 @@ char* object2string(Obj* obj) {
 char* array2string(Array* arr) {
 	char* json = (char*)calloc(INIT_STR_SIZE, sizeof(char));
 	unsigned int  cnt = 1;//打印时每行的元素个数
-	if (json == NULL) {
+	if (!json) {
 		printf("[print::make_array_string] array to json string failed!\n");
 		return NULL;
 	}
@@ -244,7 +244,7 @@ char* array2string(Array* arr) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -267,7 +267,7 @@ char* array2string(Array* arr) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -291,7 +291,7 @@ char* array2string(Array* arr) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -314,7 +314,7 @@ char* array2string(Array* arr) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -337,7 +337,7 @@ char* array2string(Array* arr) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
@@ -360,7 +360,7 @@ char* array2string(Array* arr) {
 					jsize *= 1.25;
 				}
 				char* t = (char*)realloc(json, jsize);
-				if (t != NULL) {
+				if (t) {
 					json = t;
 				}
 				else {
