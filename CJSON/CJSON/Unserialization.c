@@ -52,6 +52,7 @@ static Obj* resize_objKvs(Obj* obj, size_t size) {
 		printf("[Unserialization::resize_objKvs] Realloc KeyValue failed!\n");
 		return NULL;
 	}
+	obj->size = size;
 	obj->kvs = kvs;
 	return obj;
 }
@@ -63,7 +64,7 @@ static Obj* check_ObjKvsSize(Obj* obj) {
 		tmp = resize_objKvs(obj, obj->size + INIT_OBJ_NUMS);
 		if (!tmp) {
 			printf("[Unserialization::check_ObjKvsSize] Realloc KeyValue failed!\n");
-
+			cleanup((void*)obj, OBJECT);
 			return NULL;
 		}
 		else {
@@ -81,6 +82,7 @@ static Array* resize_arrJvs(Array* arr, size_t size) {
 		printf("[Unserialization::resize_objKvs] Realloc KeyValue failed!\n");
 		return NULL;
 	}
+	arr->size = size;
 	arr->jvs = jvs;
 	return arr;
 }
@@ -92,7 +94,7 @@ static Array* check_ArrayJvsSize(Array* arr) {
 		tmp = resize_arrJvs(arr, arr->size + INIT_ARRAY_NUMS);
 		if (!tmp) {
 			printf("[Unserialization::check_ObjKvsSize] Realloc KeyValue failed!\n");
-
+			cleanup((void*)arr, ARRAY);
 			return NULL;
 		}
 		else {
